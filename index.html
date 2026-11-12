@@ -3,457 +3,527 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Arrecife Market | Pescadería Premium</title>
+    <title>Arrecife Market | Los Mejores Insumos y los Sabores de Siempre</title>
     
     <link rel="icon" type="image/jpeg" href="logo.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Nuevas Fuentes: Outfit para el cuerpo, Playfair para títulos -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
     <style>
-        /* --- PALETA DE COLORES Y VARIABLES (Modo Oscuro por defecto) --- */
+        /* --- PALETA DE COLORES PLAYA LUMINOSA --- */
         :root {
-            --fondo-principal: #121826; 
-            --fondo-tarjeta: #1c2434;   
-            --fondo-nav: #0d111c;       
-            --naranja-cangrejo: #ff6b00; 
-            --texto-blanco: #ffffff;
-            --texto-gris: #94a3b8;      
-            --borde-sutil: #2a3446;
-            --sombra-tarjeta: 0 10px 25px rgba(0,0,0,0.4);
-            --sombra-hover: 0 15px 40px rgba(0,0,0,0.6);
+            --arena-fondo: #fcfaf6;      
+            --arena-oscura: #f2ece1;     
+            --azul-océano: #0077b6;      
+            --azul-profundo: #023e8a;    
+            --azul-cielo: #90e0ef;       
+            --naranja-coral: #ff6b00;    
+            --texto-principal: #2b2d42;  
+            --texto-suave: #8d99ae;
+            --blanco-puro: #ffffff;
+            --sombra-suave: 0 10px 30px rgba(0, 119, 182, 0.08);
+            --sombra-fuerte: 0 20px 40px rgba(0, 119, 182, 0.15);
+            --sombra-flotante: 0 15px 35px rgba(0,0,0,0.08);
         }
 
-        /* --- VARIABLES PARA EL MODO CLARO (Estilo Playa / Día) --- */
-        body.light-mode {
-            --fondo-principal: #f0f9ff; /* Azul cielo muy pálido (agua poco profunda) */
-            --fondo-tarjeta: #ffffff;   
-            --fondo-nav: #0ea5e9;       /* Azul océano brillante */
-            --texto-blanco: #0b2545;    /* Azul marino profundo para el texto */
-            --texto-gris: #475569;      
-            --borde-sutil: #bae6fd;     
-            --sombra-tarjeta: 0 10px 25px rgba(11, 37, 69, 0.08); 
-            --sombra-hover: 0 15px 40px rgba(11, 37, 69, 0.15);
-        }
-
-        /* --- RESET Y ESTILOS GENERALES --- */
+        /* --- RESET Y TIPOGRAFÍA --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: 'Montserrat', sans-serif;
-            background-color: var(--fondo-principal);
-            color: var(--texto-blanco);
+            font-family: 'Outfit', sans-serif; /* Nueva fuente principal */
+            background-color: var(--arena-fondo);
+            color: var(--texto-principal);
             line-height: 1.6;
-            -webkit-font-smoothing: antialiased;
-            transition: background-color 0.4s ease, color 0.4s ease;
             overflow-x: hidden;
+            padding-top: 100px; 
         }
 
-        /* --- BARRA DE NAVEGACIÓN --- */
+        /* Títulos grandes usan Playfair */
+        h1, h2 { font-family: 'Playfair Display', serif; }
+
+        /* --- ANIMACIONES GLOBALES --- */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* --- NAVEGACIÓN FLOTANTE --- */
+        .navbar-wrapper {
+            position: fixed;
+            top: 20px; 
+            left: 0; width: 100%;
+            display: flex; justify-content: center;
+            z-index: 2000;
+            pointer-events: none; 
+            animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
         .navbar {
-            background-color: var(--fondo-nav);
-            padding: 15px 5%;
+            background: rgba(252, 250, 246, 0.9); 
+            backdrop-filter: blur(12px); 
+            -webkit-backdrop-filter: blur(12px);
+            padding: 10px 30px 10px 15px;
+            border-radius: 100px; 
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            transition: background-color 0.4s ease;
+            width: 90%;
+            max-width: 1100px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.8); 
+            pointer-events: auto; 
+            transition: all 0.4s ease;
         }
 
-        .navbar-logo { background-color: white; padding: 5px 12px; border-radius: 8px; display: flex; align-items: center; }
-        .navbar-logo img { height: 45px; object-fit: contain; }
+        .navbar-logo {
+            background: var(--blanco-puro);
+            padding: 5px 15px;
+            border-radius: 50px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            display: flex; align-items: center;
+            transition: transform 0.3s ease;
+        }
+        .navbar-logo:hover { transform: scale(1.05) rotate(-2deg); }
+        .navbar-logo img { height: 40px; object-fit: contain; display: block; }
 
-        .navbar-links { display: flex; gap: 30px; list-style: none; }
-        .navbar-links a { text-decoration: none; color: var(--texto-gris); font-weight: 600; font-size: 0.9rem; transition: color 0.3s; }
-        body.light-mode .navbar-links a { color: #e0f2fe; }
-        .navbar-links a:hover { color: var(--naranja-cangrejo); }
-        body.light-mode .navbar-links a:hover { color: #ffffff; }
+        .navbar-links { display: flex; gap: 10px; list-style: none; }
+        
+        .navbar-links a {
+            text-decoration: none; 
+            color: var(--texto-suave);
+            font-weight: 500; 
+            font-size: 0.95rem;
+            padding: 8px 18px;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
 
-        /* --- BOTÓN DE MODO MEJORADO --- */
-        .navbar-actions { display: flex; gap: 15px; align-items: center; }
+        .navbar-links a:hover {
+            color: var(--azul-océano);
+            background: rgba(0, 119, 182, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .navbar-actions { display: flex; align-items: center; gap: 10px; }
 
         .btn-modo {
-            background-color: rgba(255, 255, 255, 0.1); /* Fondo sutil translúcido */
-            color: var(--texto-blanco);
-            border: 2px solid transparent;
-            padding: 10px 18px;
-            border-radius: 50px; /* Forma de píldora */
+            background: var(--blanco-puro);
+            color: var(--texto-principal);
+            border: 1px solid var(--arena-oscura);
+            width: 42px; height: 42px;
+            border-radius: 50%;
+            cursor: pointer; 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex; align-items: center; justify-content: center;
             font-size: 1.2rem;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .btn-modo:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
-            border-color: var(--naranja-cangrejo);
+            background: var(--azul-océano); 
+            color: var(--blanco-puro);
+            border-color: var(--azul-océano);
+            transform: translateY(-3px) rotate(180deg) scale(1.1);
         }
 
-        .btn-modo:active {
-            transform: translateY(0) scale(0.95);
-        }
-
-        /* Estilo del botón en Modo Claro */
-        body.light-mode .btn-modo {
-            background-color: #ffffff;
-            color: #0b2545;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        /* --- HERO SECTION CON OLAS PREMIUM --- */
+        /* --- HERO CON OLAS ANIMADAS --- */
         .hero {
             position: relative;
-            background: linear-gradient(180deg, var(--fondo-nav) 0%, var(--fondo-principal) 100%);
-            color: var(--texto-blanco);
+            background: linear-gradient(180deg, var(--azul-cielo) 0%, var(--azul-océano) 100%);
+            padding: 100px 20px 180px 20px;
             text-align: center;
-            padding: 90px 20px 150px 20px;
-            transition: background 0.4s ease;
             overflow: hidden;
+            border-radius: 0 0 40px 40px; 
+            margin-top: -100px; 
         }
 
-        /* Contenedor de las olas SVG */
-        .olas-container {
-            position: absolute;
-            bottom: -2px; /* Truco para que no quede línea blanca */
-            left: 0;
-            width: 100%;
-            height: 120px;
-            overflow: hidden;
-            line-height: 0;
-            z-index: 1;
+        .hero-contenido {
+            position: relative; z-index: 10;
+            max-width: 800px; margin: 0 auto;
+            color: var(--blanco-puro);
+            padding-top: 60px;
+            animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0; /* Empieza invisible para la animación */
         }
 
-        .ola {
+        .hero h1 {
+            font-size: 4rem; font-weight: 700;
+            margin-bottom: 20px; line-height: 1.1;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+        
+        .hero p {
+            font-size: 1.2rem; font-weight: 300;
+            max-width: 600px; margin: 0 auto 40px auto;
+            opacity: 0.95;
+        }
+
+        .hero-btn {
+            background-color: var(--naranja-coral);
+            color: var(--blanco-puro);
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 600; font-size: 1.1rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 25px rgba(255, 107, 0, 0.4);
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Efecto de brillo en el botón */
+        .hero-btn::after {
+            content: '';
             position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 200%;
-            height: 100%;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: rgba(255,255,255,0.2);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+            opacity: 0;
+        }
+
+        .hero-btn:hover {
+            background-color: #ff8533;
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(255, 107, 0, 0.6);
+        }
+        .hero-btn:hover::after { opacity: 1; left: 100%; }
+
+        /* --- OLAS SVG ANIMADAS --- */
+        .olas-svg {
+            position: absolute;
+            bottom: -5px; left: 0; width: 100%;
+            height: 120px; overflow: hidden; line-height: 0; z-index: 5;
+        }
+
+        .ola-capa {
+            position: absolute; bottom: 0; left: 0;
+            width: 200%; height: 100%;
             background-repeat: repeat-x;
-            background-size: 50% 100%;
-            transform-origin: center bottom;
+            animation: ola-mover 15s linear infinite, ola-respirar 4s ease-in-out infinite alternate;
         }
 
-        /* Animaciones de las olas */
-        .ola1 {
-            animation: olas-mover 12s linear infinite;
-            opacity: 0.7;
-            z-index: 3;
-        }
-        .ola2 {
-            animation: olas-mover 18s linear infinite reverse;
-            opacity: 0.5;
-            bottom: 5px;
-            z-index: 2;
-        }
-        .ola3 {
-            animation: olas-mover 25s linear infinite;
-            opacity: 0.3;
-            bottom: 15px;
-            z-index: 1;
-        }
-
-        @keyframes olas-mover {
+        @keyframes ola-mover {
             0% { transform: translateX(0); }
             100% { transform: translateX(-50%); }
         }
-
-        .hero h1, .hero p, .hero-btn { position: relative; z-index: 10; }
         
-        .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; }
-        .hero p { font-size: 1.1rem; color: var(--texto-gris); max-width: 600px; margin: 0 auto 30px auto; }
-        body.light-mode .hero p { color: #e0f2fe; }
-        
-        .hero-btn {
-            background-color: var(--naranja-cangrejo);
-            color: white;
-            text-decoration: none;
-            padding: 14px 35px;
-            border-radius: 12px;
-            font-weight: 700;
-            font-size: 1rem;
-            display: inline-block;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
-            cursor: pointer;
+        @keyframes ola-respirar {
+            0% { transform: scaleY(1); }
+            100% { transform: scaleY(1.1); }
         }
-        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5); }
 
-        /* --- SECCIÓN DE PRODUCTOS --- */
-        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; position: relative; z-index: 10;}
-        .section-header { margin-bottom: 30px; }
-        .section-header h2 { font-size: 1.8rem; color: var(--texto-blanco); font-weight: 800; margin-bottom: 5px; transition: color 0.4s ease; }
-        .section-header p { color: var(--texto-gris); font-size: 0.9rem; transition: color 0.4s ease; }
+        .ola-1 { z-index: 2; animation-duration: 15s, 5s; }
+        .ola-2 { z-index: 1; bottom: 5px; animation-duration: 20s, 7s; animation-direction: reverse, alternate; }
 
-        .filtros-container { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container {
+            max-width: 1200px;
+            margin: -50px auto 0 auto; 
+            padding: 0 20px;
+            position: relative; z-index: 20;
+            display: flex; flex-direction: column; align-items: center;
+        }
+
+        /* --- TARJETA FLOTANTE DE FILTROS --- */
+        .filtros-tarjeta {
+            background: var(--blanco-puro);
+            padding: 12px 20px;
+            border-radius: 100px;
+            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+            box-shadow: var(--sombra-flotante);
+            margin-bottom: 50px;
+            border: 1px solid rgba(0,0,0,0.03);
+            position: relative; z-index: 30;
+            animation: scaleIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
+        }
 
         .btn-filtro {
-            background-color: var(--fondo-tarjeta);
-            color: var(--texto-gris);
-            border: 1px solid var(--borde-sutil);
-            padding: 8px 20px;
-            border-radius: 10px;
-            font-weight: 600;
-            font-family: 'Montserrat', sans-serif;
+            background: transparent;
+            color: var(--texto-suave);
+            border: none;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-weight: 600; font-family: 'Outfit', sans-serif;
             cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 0.85rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.95rem;
+            transform: scale(0.95);
+            opacity: 0.7;
         }
-        .btn-filtro:hover { border-color: var(--naranja-cangrejo); color: var(--naranja-cangrejo); }
-        .btn-filtro.activo { background-color: var(--naranja-cangrejo); color: white; border-color: var(--naranja-cangrejo); }
 
+        .btn-filtro:hover {
+            color: var(--azul-océano);
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .btn-filtro.activo {
+            background: var(--azul-océano); 
+            color: var(--blanco-puro);
+            transform: scale(1.1);
+            opacity: 1;
+            box-shadow: 0 4px 15px rgba(0, 119, 182, 0.4);
+        }
+
+        /* --- SEPARADORES --- */
         .separador-categoria {
-            grid-column: 1 / -1; 
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--texto-blanco);
-            margin-top: 30px;
-            margin-bottom: 10px;
-            padding-bottom: 10px;
-            border-bottom: 2px dashed var(--borde-sutil);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: color 0.4s ease, border-color 0.4s ease;
+            width: 100%;
+            grid-column: 1 / -1;
+            font-size: 2rem; color: var(--azul-profundo);
+            margin: 30px 0 15px 0;
+            display: flex; align-items: center; gap: 15px;
+            animation: fadeInUp 0.6s ease forwards;
+            opacity: 0;
         }
-        .separador-categoria::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 24px;
-            background-color: var(--naranja-cangrejo);
-            border-radius: 4px;
+        .separador-categoria::after {
+            content: ''; flex: 1; height: 1px;
+            background: linear-gradient(90deg, var(--arena-oscura) 0%, transparent 100%);
         }
 
-        .grid-productos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; align-items: start; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* --- GRID Y TARJETAS --- */
+        .grid-productos {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 40px;
+        }
 
         .producto-card {
-            background: var(--fondo-tarjeta);
-            border-radius: 20px;
+            background: var(--blanco-puro);
+            border-radius: 24px;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
+            box-shadow: var(--sombra-suave);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            border: 1px solid var(--borde-sutil);
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-            cursor: pointer;
-            height: 100%;
-            box-shadow: var(--sombra-tarjeta);
+            border: 1px solid var(--arena-oscura);
+            display: flex; flex-direction: column;
+            /* Animación de entrada */
+            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            opacity: 0;
         }
 
-        /* Detalle de arena en modo claro */
-        body.light-mode .producto-card {
-            border-bottom: 5px solid #fcd34d; 
+        /* Efecto Hover 3D */
+        .producto-card:hover {
+            transform: translateY(-10px) rotateX(2deg) rotateY(2deg);
+            box-shadow: var(--sombra-fuerte);
+            border-color: var(--azul-cielo);
         }
 
-        .producto-card.expandida {
-            grid-column: 1 / -1; 
-            flex-direction: row; 
-            cursor: default;
-            border-color: var(--naranja-cangrejo);
-            box-shadow: var(--sombra-hover);
+        .img-container {
+            width: 100%; height: 250px;
+            overflow: hidden; position: relative;
         }
-
-        .producto-card .img-container { width: 100%; height: 200px; transition: all 0.5s ease; overflow: hidden; }
-        .producto-card .producto-imagen { width: 100%; height: 100%; object-fit: cover; transition: all 0.5s ease; }
-        .producto-card.expandida .img-container { width: 50%; height: auto; min-height: 400px; }
-        .producto-card.expandida .producto-imagen { height: 100%; min-height: 400px; object-fit: cover; }
-
-        .producto-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; transition: all 0.5s ease; }
-        .producto-card.expandida .producto-info { width: 50%; padding: 40px; justify-content: center; }
-
-        @media (max-width: 768px) {
-            .producto-card.expandida { flex-direction: column; }
-            .producto-card.expandida .img-container,
-            .producto-card.expandida .producto-info { width: 100%; }
-            .producto-card.expandida .img-container { min-height: 250px; }
+        .producto-imagen {
+            width: 100%; height: 100%; object-fit: cover;
+            transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
+        .producto-card:hover .producto-imagen { transform: scale(1.15); }
 
         .badge {
-            position: absolute; top: 15px; left: 15px;
-            background-color: var(--naranja-cangrejo); color: white;
-            padding: 4px 10px; border-radius: 6px; font-size: 0.7rem;
-            font-weight: 700; text-transform: uppercase; z-index: 10;
+            position: absolute; top: 20px; right: 20px;
+            background: var(--naranja-coral); color: var(--blanco-puro);
+            padding: 6px 16px; border-radius: 50px;
+            font-size: 0.75rem; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 1px; z-index: 10;
+            box-shadow: 0 4px 10px rgba(255, 107, 0, 0.3);
         }
         .badge:empty { display: none; }
 
-        .producto-nombre { font-size: 1.2rem; margin: 0 0 5px 0; color: var(--texto-blanco); font-weight: 700; transition: color 0.4s ease;}
-        .producto-descripcion { font-size: 0.85rem; color: var(--texto-gris); margin-bottom: 20px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.5s ease; }
-        .producto-card.expandida .producto-descripcion { -webkit-line-clamp: initial; font-size: 1rem; margin-bottom: 30px; }
+        .producto-info {
+            padding: 25px;
+            display: flex; flex-direction: column; flex-grow: 1;
+        }
 
-        .producto-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
-        .precio { font-size: 1.4rem; font-weight: 800; color: var(--texto-blanco); transition: color 0.4s ease; }
+        /* Nueva fuente para las tarjetas (Outfit) */
+        .producto-nombre {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem; color: var(--azul-profundo);
+            margin-bottom: 8px; font-weight: 700;
+        }
         
-        .btn-comprar {
-            background-color: transparent; color: var(--naranja-cangrejo);
-            border: 1px solid var(--naranja-cangrejo); padding: 8px 15px;
-            border-radius: 8px; cursor: pointer; font-weight: 700;
-            font-size: 0.8rem; font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s;
+        .producto-descripcion {
+            font-size: 0.95rem; color: var(--texto-suave);
+            margin-bottom: 20px; flex-grow: 1;
+            display: -webkit-box; -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical; overflow: hidden;
+            font-weight: 400;
         }
-        .btn-comprar:hover { background-color: var(--naranja-cangrejo); color: white; }
 
-        footer { background-color: var(--fondo-nav); color: var(--texto-gris); padding: 50px 5% 20px 5%; margin-top: 60px; border-top: 1px solid var(--borde-sutil); transition: all 0.4s ease; }
-        body.light-mode footer { color: #e0f2fe; }
-        body.light-mode .footer-col h4 { color: white; }
-        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 30px; }
-        .footer-col h4 { font-size: 1rem; margin-bottom: 15px; color: var(--texto-blanco); transition: color 0.4s ease;}
-        .footer-col p, .footer-col a { color: var(--texto-gris); text-decoration: none; font-size: 0.85rem; display: block; margin-bottom: 8px; transition: color 0.3s; }
-        .footer-col a:hover { color: var(--naranja-cangrejo); }
-        .footer-bottom { text-align: center; padding-top: 20px; font-size: 0.75rem; color: var(--texto-gris); }
-
-        @media (max-width: 768px) {
-            .navbar-links { display: none; }
-            .hero h1 { font-size: 2rem; }
+        .producto-footer {
+            display: flex; justify-content: space-between; align-items: center;
+            margin-top: auto; padding-top: 20px;
+            border-top: 1px solid var(--arena-oscura);
         }
+
+        .precio {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem; font-weight: 700;
+            color: var(--naranja-coral);
+        }
+
+        .btn-expandir {
+            background: var(--arena-fondo); color: var(--azul-océano);
+            border: 1px solid var(--arena-oscura);
+            padding: 10px 20px; border-radius: 12px;
+            font-weight: 600; font-family: 'Outfit', sans-serif;
+            cursor: pointer; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-expandir:hover {
+            background: var(--azul-océano); color: var(--blanco-puro);
+            border-color: var(--azul-océano);
+            transform: scale(1.05);
+        }
+        .btn-expandir:active { transform: scale(0.95); }
+
+        /* --- TARJETA EXPANDIDA --- */
+        .producto-card.expandida {
+            grid-column: 1 / -1;
+            display: flex; 
+            flex-direction: row; 
+            height: 420px; 
+            border: 2px solid var(--azul-cielo);
+            box-shadow: var(--sombra-fuerte);
+            transform: translateY(0) rotateX(0) rotateY(0); /* Resetea el 3D */
+            animation: scaleIn 0.4s ease forwards;
+        }
+
+        .producto-card.expandida .img-container { width: 50%; height: 100%; }
+        .producto-card.expandida .producto-imagen { object-fit: cover; }
+        .producto-card.expandida .producto-imagen:hover { transform: scale(1); } /* Sin zoom al estar expandida */
+
+        .producto-card.expandida .producto-info {
+            width: 50%; padding: 40px; justify-content: center;
+        }
+        .producto-card.expandida .producto-nombre { font-size: 2.5rem; }
+        .producto-card.expandida .producto-descripcion {
+            -webkit-line-clamp: initial; font-size: 1.05rem; margin-bottom: 30px;
+        }
+        .producto-card.expandida .precio { font-size: 2.2rem; }
+
+        @media (max-width: 900px) {
+            .navbar-links { display: none; } 
+            .navbar { padding: 8px 15px 8px 10px; }
+            .producto-card.expandida { flex-direction: column; height: auto; }
+            .producto-card.expandida .img-container { width: 100%; height: 300px; }
+            .producto-card.expandida .producto-info { width: 100%; padding: 30px; }
+            .hero h1 { font-size: 2.5rem; }
+            .filtros-tarjeta { border-radius: 20px; }
+            body { padding-top: 90px; }
+        }
+
+        footer {
+            background: var(--azul-profundo);
+            color: var(--blanco-puro);
+            text-align: center;
+            padding: 60px 20px;
+            margin-top: 80px;
+        }
+        footer h3 { font-family: 'Playfair Display', serif; font-size: 2rem; margin-bottom: 10px; }
+        footer p { font-weight: 300; opacity: 0.8; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <div class="navbar-logo">
-            <img src="logo.jpg" alt="Arrecife Market Logo">
-        </div>
-        <ul class="navbar-links">
-            <li><a href="#">Inicio</a></li>
-            <li><a href="#productos">Productos</a></li>
-            <li><a href="#">Nosotros</a></li>
-            <li><a href="#">Contacto</a></li>
-        </ul>
-        <div class="navbar-actions">
-            <!-- Botón de tema rediseñado -->
-            <button class="btn-modo" id="btn-modo" onclick="cambiarTema()">🌙</button>
-        </div>
-    </nav>
+    <div class="navbar-wrapper">
+        <nav class="navbar">
+            <div class="navbar-logo">
+                <img src="logo.jpg" alt="Arrecife Market">
+            </div>
+            <ul class="navbar-links">
+                <li><a href="#" style="color: var(--azul-océano); background: rgba(0,119,182,0.05);">Inicio</a></li>
+                <li><a href="#productos">Catálogo</a></li>
+                <li><a href="#">Nosotros</a></li>
+                <li><a href="#">Contacto</a></li>
+            </ul>
+            <div class="navbar-actions">
+                <button class="btn-modo" onclick="alert('¡El modo oscuro está en mantenimiento, disfruta del sol! ☀️')" title="Cambiar Tema">🌙</button>
+            </div>
+        </nav>
+    </div>
 
     <header class="hero">
-        <h1>La frescura del arrecife,<br>directo a tu mesa.</h1>
-        <p>Seleccionamos los mejores productos del mar. (El cangrejo de nuestro logo supervisa personalmente cada pedido).</p>
-        <a href="#productos" class="hero-btn">Ver Catálogo</a>
+        <div class="hero-contenido">
+            <h1>Los Mejores Insumos y los Sabores de Siempre</h1>
+            <p>Los mejores insumos para tu sushi y los abarrotes que te recuerdan a casa. Calidad y frescura en un solo lugar</p>
+            <a href="#productos" class="hero-btn">Ver los productos</a>
+        </div>
 
-        <!-- Olas SVG de alta calidad -->
-        <div class="olas-container">
-            <!-- Ola 3 (Más lejana, más sutil) -->
-            <div class="ola ola3" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z\' fill=\'%230ea5e9\' opacity=\'.2\'></path></svg>');"></div>
-            
-            <!-- Ola 2 (Intermedia) -->
-            <div class="ola ola2" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z\' fill=\'%230ea5e9\' opacity=\'.5\'></path></svg>');"></div>
-            
-            <!-- Ola 1 (Más cercana, la más visible) -->
-            <div class="ola ola1" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z\' fill=\'%230ea5e9\'></path></svg>');"></div>
+        <div class="olas-svg">
+            <div class="ola-capa ola-2" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1440 120\' preserveAspectRatio=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z\' fill=\'%23caf0f8\' opacity=\'0.9\'></path></svg>');"></div>
+            <div class="ola-capa ola-1" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1440 120\' preserveAspectRatio=\'none\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,64L80,69.3C160,75,320,85,480,80C640,75,800,53,960,42.7C1120,32,1280,32,1360,32L1440,32L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z\' fill=\'%23fcfaf6\'></path></svg>');"></div>
         </div>
     </header>
 
     <main class="container" id="productos">
-        <div class="section-header">
-            <h2>Categorías</h2>
-            <p>Explora nuestra selección premium</p>
-        </div>
-
-        <div class="filtros-container" id="filtros-container">
+        
+        <div class="filtros-tarjeta" id="filtros-container">
             <button class="btn-filtro activo" onclick="filtrarProductos('todos', this)">Todos</button>
         </div>
 
-        <div class="section-header" style="margin-top: 40px;">
-            <h2>Nuestro Catálogo</h2>
+        <div class="grid-productos" id="contenedor-productos">
+            <p style="text-align: center; width: 100%; color: var(--texto-suave); font-weight: 500;">Cargando la pesca del día... 🎣</p>
         </div>
 
-        <div class="grid-productos" id="contenedor-productos">
-            <p style="text-align: center; grid-column: 1 / -1; color: var(--texto-gris); font-weight: bold; padding: 20px;">
-                🦀 Cargando productos...
-            </p>
-        </div>
     </main>
 
     <footer>
-        <div class="footer-grid">
-            <div class="footer-col">
-                <h4>Arrecife Market</h4>
-                <p>La pescadería más divertida y fresca de la web.</p>
-            </div>
-            <div class="footer-col">
-                <h4>Enlaces</h4>
-                <a href="#">Inicio</a>
-                <a href="#productos">Catálogo</a>
-                <a href="#">Envíos</a>
-            </div>
-            <div class="footer-col">
-                <h4>Contacto</h4>
-                <p>📍 Fondo del Mar, Arrecife #404</p>
-                <p>📞 +1 800 CANGREJO</p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>© 2023 Arrecife Market. Todos los derechos reservados.</p>
-        </div>
+        <h3>Arrecife Market</h3>
+        <p>La pescadería más fresca y divertida de la web. Todos los derechos reservados.</p>
+        <p>© 2024 Arrecife Market. Hecho con sal y sol.</p>
     </footer>
 
     <script>
         const URL_EXCEL_ONLINE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-wBzHjp6urAM1pl8f9kDGMH0nXBZEOIITuY6N7bXWPoVz6EUm5ApBHTTIupYrO3VDEZGPYtz4SiSK/pub?output=csv';
-
         let todosLosProductos = [];
 
         document.addEventListener("DOMContentLoaded", () => {
-            const temaGuardado = localStorage.getItem('tema-arrecife');
-            
-            if (temaGuardado === 'claro') {
-                document.body.classList.add('light-mode');
-                document.getElementById('btn-modo').innerText = '☀️';
-            } else {
-                document.getElementById('btn-modo').innerText = '🌙';
-            }
-
             Papa.parse(URL_EXCEL_ONLINE, {
-                download: true,
-                header: true,
-                skipEmptyLines: true,
+                download: true, header: true, skipEmptyLines: true,
                 complete: function(results) {
                     if(results.data && results.data.length > 0) {
                         todosLosProductos = results.data.map(fila => {
                             const filaLimpia = {};
                             for (let llave in fila) {
                                 if (fila.hasOwnProperty(llave)) {
-                                    let nombreColumna = llave.toLowerCase().trim()
-                                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                                    let nombreColumna = llave.toLowerCase().trim().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
                                     filaLimpia[nombreColumna] = fila[llave];
                                 }
                             }
                             return filaLimpia;
                         });
-
                         crearBotonesCategorias(todosLosProductos);
                         renderizarProductos(todosLosProductos, 'todos');
                     } else {
                         mostrarError("El archivo está vacío.");
                     }
                 },
-                error: function(error) {
-                    mostrarError("No se pudo conectar con Google Sheets.");
-                }
+                error: function(error) { mostrarError("No se pudo conectar con Google Sheets."); }
             });
         });
 
-        function cambiarTema() {
-            const body = document.body;
-            const btn = document.getElementById('btn-modo');
-            
-            body.classList.toggle('light-mode');
-            
-            if (body.classList.contains('light-mode')) {
-                btn.innerText = '☀️';
-                localStorage.setItem('tema-arrecife', 'claro');
-            } else {
-                btn.innerText = '🌙';
-                localStorage.setItem('tema-arrecife', 'oscuro');
-            }
+        function formatearPrecioCLP(valor) {
+            let numero = String(valor).replace(/[^0-9]/g, '');
+            if (numero === '') return '$0';
+            let precio = parseInt(numero, 10);
+            return '$' + precio.toLocaleString('es-CL');
         }
 
         function crearBotonesCategorias(productos) {
@@ -477,7 +547,6 @@
             if (categoriaSeleccionada !== 'todos') {
                 productosFiltrados = todosLosProductos.filter(p => p.categoria && p.categoria.toLowerCase() === categoriaSeleccionada.toLowerCase());
             }
-            
             renderizarProductos(productosFiltrados, categoriaSeleccionada);
         }
 
@@ -486,9 +555,11 @@
             contenedor.innerHTML = ''; 
 
             if(productos.length === 0) {
-                contenedor.innerHTML = `<p style="text-align: center; grid-column: 1 / -1; color: var(--texto-gris);">No hay productos aquí. 🦀</p>`;
+                contenedor.innerHTML = `<p style="text-align: center; width: 100%; color: var(--texto-suave);">No hay productos en esta categoría. 🦀</p>`;
                 return;
             }
+
+            let delay = 0; // Para el efecto cascada
 
             if (categoriaSeleccionada === 'todos') {
                 const categorias = [...new Set(productos.map(p => p.categoria))].filter(c => c);
@@ -497,40 +568,33 @@
                     const tituloSeparador = document.createElement('div');
                     tituloSeparador.className = 'separador-categoria';
                     tituloSeparador.innerText = cat;
+                    tituloSeparador.style.animationDelay = `${delay}s`;
                     contenedor.appendChild(tituloSeparador);
+                    delay += 0.1;
 
                     const productosDeCategoria = productos.filter(p => p.categoria === cat);
-                    dibujarTarjetas(productosDeCategoria, contenedor);
+                    dibujarTarjetas(productosDeCategoria, contenedor, delay);
+                    delay += productosDeCategoria.length * 0.1; // Aumenta el delay por cada tarjeta
                 });
-
-                const productosSinCategoria = productos.filter(p => !p.categoria || p.categoria.trim() === '');
-                if (productosSinCategoria.length > 0) {
-                    const tituloSeparador = document.createElement('div');
-                    tituloSeparador.className = 'separador-categoria';
-                    tituloSeparador.innerText = 'Otros Productos';
-                    contenedor.appendChild(tituloSeparador);
-                    dibujarTarjetas(productosSinCategoria, contenedor);
-                }
             } else {
-                dibujarTarjetas(productos, contenedor);
+                dibujarTarjetas(productos, contenedor, delay);
             }
         }
 
-        function dibujarTarjetas(listaProductos, contenedor) {
+        function dibujarTarjetas(listaProductos, contenedor, startDelay) {
             listaProductos.forEach((prod, index) => {
                 const nombre = prod.nombre || 'Producto sin nombre';
                 const descripcion = prod.descripcion || 'Sin descripción disponible.';
-                const precioOriginal = prod.precio || '0';
-                
-                const precioLimpio = String(precioOriginal).replace(/[^0-9.,-]/g, '').replace(',', '.');
-                const precioFormateado = isNaN(parseFloat(precioLimpio)) ? '0.00' : parseFloat(precioLimpio).toFixed(2);
-                
+                const precioFormateado = formatearPrecioCLP(prod.precio);
                 const etiqueta = prod.etiqueta || '';
                 const imagen = prod.imagen || 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?q=80&w=600&auto=format&fit=crop';
 
                 const tarjeta = document.createElement('div');
                 tarjeta.className = 'producto-card';
                 
+                // Asignar delay para el efecto cascada
+                tarjeta.style.animationDelay = `${startDelay + (index * 0.1)}s`;
+
                 const idTarjeta = 'tarjeta-' + Math.random().toString(36).substr(2, 9);
                 tarjeta.id = idTarjeta;
 
@@ -543,8 +607,8 @@
                         <h3 class="producto-nombre">${nombre}</h3>
                         <p class="producto-descripcion">${descripcion}</p>
                         <div class="producto-footer">
-                            <span class="precio">$${precioFormateado}</span>
-                            <button class="btn-comprar" onclick="toggleExpandir('${idTarjeta}', this)">Ver más</button>
+                            <span class="precio">${precioFormateado}</span>
+                            <button class="btn-expandir" onclick="toggleExpandir('${idTarjeta}', this)">Ver detalle</button>
                         </div>
                     </div>
                 `;
@@ -558,18 +622,19 @@
             
             if (tarjeta.classList.contains('expandida')) {
                 tarjeta.classList.remove('expandida');
-                boton.innerText = 'Ver más';
+                boton.innerText = 'Ver detalle';
             } else {
                 document.querySelectorAll('.producto-card.expandida').forEach(card => {
                     card.classList.remove('expandida');
                 });
-                document.querySelectorAll('.btn-comprar').forEach(btn => {
-                    btn.innerText = 'Ver más';
+                document.querySelectorAll('.btn-expandir').forEach(btn => {
+                    btn.innerText = 'Ver detalle';
                 });
 
                 tarjeta.classList.add('expandida');
-                boton.innerText = 'Ver menos';
-
+                boton.innerText = 'Cerrar';
+                
+                // Pequeño scroll para que la tarjeta quede a la vista
                 setTimeout(() => {
                     tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 100);
@@ -578,8 +643,8 @@
 
         function mostrarError(mensaje) {
             document.getElementById('contenedor-productos').innerHTML = `
-                <div style="grid-column: 1 / -1; text-align: center; padding: 30px; background: #2a1a1a; border-radius: 15px; border: 1px solid #ff4d4d; color: #ff4d4d;">
-                    <h3>🚨 Error</h3>
+                <div style="width: 100%; text-align: center; padding: 40px; background: rgba(255,0,0,0.05); border-radius: 15px; color: #d90429;">
+                    <h3>🚨 Ups...</h3>
                     <p>${mensaje}</p>
                 </div>
             `;
