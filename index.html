@@ -4,511 +4,586 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Arrecife Market | Pescadería Premium</title>
+    
+    <link rel="icon" type="image/jpeg" href="logo.jpg">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
     <style>
-        /* --- PALETA DE COLORES --- */
+        /* --- PALETA DE COLORES Y VARIABLES (Modo Oscuro por defecto) --- */
         :root {
-            --azul-marino: #0b2545; 
-            --azul-ola: #134074;    
+            --fondo-principal: #121826; 
+            --fondo-tarjeta: #1c2434;   
+            --fondo-nav: #0d111c;       
             --naranja-cangrejo: #ff6b00; 
-            --verde-agua: #0d9488;   
-            --amarillo-mostaza: #fbbf24; 
-            --fondo-crema: #faf8f5;  
-            --blanco-puro: #ffffff;
-            --gris-texto: #64748b;
-            --sombra-suave: 0 10px 30px rgba(11, 37, 69, 0.08);
+            --texto-blanco: #ffffff;
+            --texto-gris: #94a3b8;      
+            --borde-sutil: #2a3446;
+            --sombra-tarjeta: 0 10px 25px rgba(0,0,0,0.4);
+            --sombra-hover: 0 15px 40px rgba(0,0,0,0.6);
+        }
+
+        /* --- VARIABLES PARA EL MODO CLARO (Estilo Playa / Día) --- */
+        body.light-mode {
+            --fondo-principal: #f0f9ff; /* Azul cielo muy pálido (agua poco profunda) */
+            --fondo-tarjeta: #ffffff;   
+            --fondo-nav: #0ea5e9;       /* Azul océano brillante */
+            --texto-blanco: #0b2545;    /* Azul marino profundo para el texto */
+            --texto-gris: #475569;      
+            --borde-sutil: #bae6fd;     
+            --sombra-tarjeta: 0 10px 25px rgba(11, 37, 69, 0.08); 
+            --sombra-hover: 0 15px 40px rgba(11, 37, 69, 0.15);
         }
 
         /* --- RESET Y ESTILOS GENERALES --- */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
 
         body {
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--fondo-crema);
-            color: var(--azul-marino);
+            background-color: var(--fondo-principal);
+            color: var(--texto-blanco);
             line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
         }
 
-        /* --- BARRA DE NAVEGACIÓN (AHORA AZUL OSCURO) --- */
+        /* --- BARRA DE NAVEGACIÓN --- */
         .navbar {
-            background-color: var(--azul-marino); /* Fondo oscuro para que resalte el logo blanco */
+            background-color: var(--fondo-nav);
             padding: 15px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
-            border-bottom: 4px solid var(--naranja-cangrejo); /* Línea naranja de acento */
+            transition: background-color 0.4s ease;
         }
 
-        /* Efecto para que el logo blanco se vea limpio */
-        .navbar-logo {
-            background-color: white;
-            padding: 8px 15px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
+        .navbar-logo { background-color: white; padding: 5px 12px; border-radius: 8px; display: flex; align-items: center; }
+        .navbar-logo img { height: 45px; object-fit: contain; }
 
-        .navbar-logo img {
-            height: 50px; /* Ajusta el tamaño si es necesario */
-            object-fit: contain;
-        }
+        .navbar-links { display: flex; gap: 30px; list-style: none; }
+        .navbar-links a { text-decoration: none; color: var(--texto-gris); font-weight: 600; font-size: 0.9rem; transition: color 0.3s; }
+        body.light-mode .navbar-links a { color: #e0f2fe; }
+        .navbar-links a:hover { color: var(--naranja-cangrejo); }
+        body.light-mode .navbar-links a:hover { color: #ffffff; }
 
-        .navbar-links {
-            display: flex;
-            gap: 30px;
-            list-style: none;
-        }
+        /* --- BOTÓN DE MODO MEJORADO --- */
+        .navbar-actions { display: flex; gap: 15px; align-items: center; }
 
-        /* Enlaces en blanco para contrastar con el fondo oscuro */
-        .navbar-links a {
-            text-decoration: none;
-            color: var(--blanco-puro);
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: color 0.3s;
-        }
-
-        .navbar-links a:hover {
-            color: var(--naranja-cangrejo); /* El hover se vuelve naranja */
-        }
-
-        /* Botón del carrito en naranja para que resalte */
-        .navbar-cart {
-            background-color: var(--naranja-cangrejo);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .btn-modo {
+            background-color: rgba(255, 255, 255, 0.1); /* Fondo sutil translúcido */
+            color: var(--texto-blanco);
+            border: 2px solid transparent;
+            padding: 10px 18px;
+            border-radius: 50px; /* Forma de píldora */
+            font-size: 1.2rem;
             cursor: pointer;
-            border: none;
-            transition: background 0.3s, transform 0.2s;
-            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
-        .navbar-cart:hover {
-            background-color: var(--amarillo-mostaza);
-            color: var(--azul-marino);
-            transform: scale(1.05);
+        .btn-modo:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.4);
+            border-color: var(--naranja-cangrejo);
         }
 
-        /* --- HERO SECTION --- */
+        .btn-modo:active {
+            transform: translateY(0) scale(0.95);
+        }
+
+        /* Estilo del botón en Modo Claro */
+        body.light-mode .btn-modo {
+            background-color: #ffffff;
+            color: #0b2545;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        /* --- HERO SECTION CON OLAS PREMIUM --- */
         .hero {
-            background: linear-gradient(135deg, var(--azul-ola) 0%, var(--verde-agua) 100%);
-            color: white;
-            text-align: center;
-            padding: 90px 20px;
             position: relative;
+            background: linear-gradient(180deg, var(--fondo-nav) 0%, var(--fondo-principal) 100%);
+            color: var(--texto-blanco);
+            text-align: center;
+            padding: 90px 20px 150px 20px;
+            transition: background 0.4s ease;
             overflow: hidden;
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 800;
-            margin-bottom: 15px;
-            letter-spacing: -1px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        /* Contenedor de las olas SVG */
+        .olas-container {
+            position: absolute;
+            bottom: -2px; /* Truco para que no quede línea blanca */
+            left: 0;
+            width: 100%;
+            height: 120px;
+            overflow: hidden;
+            line-height: 0;
+            z-index: 1;
         }
 
-        .hero p {
-            font-size: 1.2rem;
-            font-weight: 400;
-            opacity: 0.95;
-            max-width: 600px;
-            margin: 0 auto 30px auto;
+        .ola {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%;
+            height: 100%;
+            background-repeat: repeat-x;
+            background-size: 50% 100%;
+            transform-origin: center bottom;
         }
 
+        /* Animaciones de las olas */
+        .ola1 {
+            animation: olas-mover 12s linear infinite;
+            opacity: 0.7;
+            z-index: 3;
+        }
+        .ola2 {
+            animation: olas-mover 18s linear infinite reverse;
+            opacity: 0.5;
+            bottom: 5px;
+            z-index: 2;
+        }
+        .ola3 {
+            animation: olas-mover 25s linear infinite;
+            opacity: 0.3;
+            bottom: 15px;
+            z-index: 1;
+        }
+
+        @keyframes olas-mover {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .hero h1, .hero p, .hero-btn { position: relative; z-index: 10; }
+        
+        .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; }
+        .hero p { font-size: 1.1rem; color: var(--texto-gris); max-width: 600px; margin: 0 auto 30px auto; }
+        body.light-mode .hero p { color: #e0f2fe; }
+        
         .hero-btn {
-            background-color: var(--amarillo-mostaza);
-            color: var(--azul-marino);
+            background-color: var(--naranja-cangrejo);
+            color: white;
             text-decoration: none;
-            padding: 15px 35px;
-            border-radius: 30px;
-            font-weight: 800;
-            font-size: 1.1rem;
+            padding: 14px 35px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
             display: inline-block;
             transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+            box-shadow: 0 4px 15px rgba(255, 107, 0, 0.3);
+            cursor: pointer;
         }
-
-        .hero-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
-            background-color: #fcd34d;
-        }
+        .hero-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 107, 0, 0.5); }
 
         /* --- SECCIÓN DE PRODUCTOS --- */
-        .container {
-            max-width: 1200px;
-            margin: 60px auto;
-            padding: 0 20px;
-        }
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; position: relative; z-index: 10;}
+        .section-header { margin-bottom: 30px; }
+        .section-header h2 { font-size: 1.8rem; color: var(--texto-blanco); font-weight: 800; margin-bottom: 5px; transition: color 0.4s ease; }
+        .section-header p { color: var(--texto-gris); font-size: 0.9rem; transition: color 0.4s ease; }
 
-        .section-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
+        .filtros-container { display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 40px; }
 
-        .section-header h2 {
-            font-size: 2.2rem;
-            color: var(--azul-marino);
+        .btn-filtro {
+            background-color: var(--fondo-tarjeta);
+            color: var(--texto-gris);
+            border: 1px solid var(--borde-sutil);
+            padding: 8px 20px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+        }
+        .btn-filtro:hover { border-color: var(--naranja-cangrejo); color: var(--naranja-cangrejo); }
+        .btn-filtro.activo { background-color: var(--naranja-cangrejo); color: white; border-color: var(--naranja-cangrejo); }
+
+        .separador-categoria {
+            grid-column: 1 / -1; 
+            font-size: 1.5rem;
             font-weight: 800;
+            color: var(--texto-blanco);
+            margin-top: 30px;
             margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 2px dashed var(--borde-sutil);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: color 0.4s ease, border-color 0.4s ease;
+        }
+        .separador-categoria::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 24px;
+            background-color: var(--naranja-cangrejo);
+            border-radius: 4px;
         }
 
-        .section-header p {
-            color: var(--gris-texto);
-            font-size: 1.1rem;
-        }
+        .grid-productos { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; align-items: start; transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        /* --- CUADRÍCULA DE PRODUCTOS --- */
-        .grid-productos {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 40px;
-        }
-
-        /* --- TARJETA DE PRODUCTO --- */
         .producto-card {
-            background: var(--blanco-puro);
+            background: var(--fondo-tarjeta);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: var(--sombra-suave);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
             display: flex;
             flex-direction: column;
             position: relative;
-            border-top: 5px solid var(--amarillo-mostaza); 
-        }
-
-        .producto-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 35px rgba(11, 37, 69, 0.15);
-            border-top-color: var(--verde-agua); 
-        }
-
-        /* Etiquetas (Badges) */
-        .badge {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            background-color: var(--naranja-cangrejo);
-            color: white;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            z-index: 10;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-        }
-
-        .producto-imagen {
-            height: 220px;
-            width: 100%;
-            object-fit: cover;
-            transition: transform 0.5s ease;
-        }
-
-        .producto-card:hover .producto-imagen {
-            transform: scale(1.05);
-        }
-
-        .img-container {
-            overflow: hidden;
-        }
-
-        .producto-info {
-            padding: 25px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .producto-nombre {
-            font-size: 1.2rem;
-            margin: 0 0 8px 0;
-            color: var(--azul-marino);
-            font-weight: 700;
-        }
-
-        .producto-descripcion {
-            font-size: 0.9rem;
-            color: var(--gris-texto);
-            margin-bottom: 15px;
-            flex-grow: 1;
-        }
-
-        .valoracion {
-            color: var(--amarillo-mostaza); 
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
-
-        .producto-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: auto;
-            border-top: 1px solid #e2e8f0;
-            padding-top: 15px;
-        }
-
-        .precio {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--verde-agua); 
-        }
-
-        .btn-comprar {
-            background-color: var(--azul-ola);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
+            border: 1px solid var(--borde-sutil);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
             cursor: pointer;
-            font-weight: 700;
-            font-family: 'Montserrat', sans-serif;
-            transition: background 0.3s, transform 0.2s;
+            height: 100%;
+            box-shadow: var(--sombra-tarjeta);
         }
 
-        .btn-comprar:hover {
-            background-color: var(--verde-agua);
-            transform: scale(1.05);
+        /* Detalle de arena en modo claro */
+        body.light-mode .producto-card {
+            border-bottom: 5px solid #fcd34d; 
         }
 
-        /* --- PIE DE PÁGINA (FOOTER) --- */
-        footer {
-            background-color: var(--azul-marino);
-            color: white;
-            padding: 60px 5% 20px 5%;
-            margin-top: 80px;
-            border-top: 5px solid var(--naranja-cangrejo); 
+        .producto-card.expandida {
+            grid-column: 1 / -1; 
+            flex-direction: row; 
+            cursor: default;
+            border-color: var(--naranja-cangrejo);
+            box-shadow: var(--sombra-hover);
         }
 
-        .footer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 40px;
+        .producto-card .img-container { width: 100%; height: 200px; transition: all 0.5s ease; overflow: hidden; }
+        .producto-card .producto-imagen { width: 100%; height: 100%; object-fit: cover; transition: all 0.5s ease; }
+        .producto-card.expandida .img-container { width: 50%; height: auto; min-height: 400px; }
+        .producto-card.expandida .producto-imagen { height: 100%; min-height: 400px; object-fit: cover; }
+
+        .producto-info { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; width: 100%; transition: all 0.5s ease; }
+        .producto-card.expandida .producto-info { width: 50%; padding: 40px; justify-content: center; }
+
+        @media (max-width: 768px) {
+            .producto-card.expandida { flex-direction: column; }
+            .producto-card.expandida .img-container,
+            .producto-card.expandida .producto-info { width: 100%; }
+            .producto-card.expandida .img-container { min-height: 250px; }
         }
 
-        .footer-col h4 {
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-            color: var(--amarillo-mostaza); 
+        .badge {
+            position: absolute; top: 15px; left: 15px;
+            background-color: var(--naranja-cangrejo); color: white;
+            padding: 4px 10px; border-radius: 6px; font-size: 0.7rem;
+            font-weight: 700; text-transform: uppercase; z-index: 10;
         }
+        .badge:empty { display: none; }
 
-        .footer-col p, .footer-col a {
-            color: rgba(255,255,255,0.7);
-            text-decoration: none;
-            font-size: 0.9rem;
-            display: block;
-            margin-bottom: 10px;
-            transition: color 0.3s;
+        .producto-nombre { font-size: 1.2rem; margin: 0 0 5px 0; color: var(--texto-blanco); font-weight: 700; transition: color 0.4s ease;}
+        .producto-descripcion { font-size: 0.85rem; color: var(--texto-gris); margin-bottom: 20px; flex-grow: 1; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; transition: all 0.5s ease; }
+        .producto-card.expandida .producto-descripcion { -webkit-line-clamp: initial; font-size: 1rem; margin-bottom: 30px; }
+
+        .producto-footer { display: flex; justify-content: space-between; align-items: center; margin-top: auto; }
+        .precio { font-size: 1.4rem; font-weight: 800; color: var(--texto-blanco); transition: color 0.4s ease; }
+        
+        .btn-comprar {
+            background-color: transparent; color: var(--naranja-cangrejo);
+            border: 1px solid var(--naranja-cangrejo); padding: 8px 15px;
+            border-radius: 8px; cursor: pointer; font-weight: 700;
+            font-size: 0.8rem; font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
         }
+        .btn-comprar:hover { background-color: var(--naranja-cangrejo); color: white; }
 
-        .footer-col a:hover {
-            color: var(--naranja-cangrejo);
-        }
+        footer { background-color: var(--fondo-nav); color: var(--texto-gris); padding: 50px 5% 20px 5%; margin-top: 60px; border-top: 1px solid var(--borde-sutil); transition: all 0.4s ease; }
+        body.light-mode footer { color: #e0f2fe; }
+        body.light-mode .footer-col h4 { color: white; }
+        .footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; border-bottom: 1px solid var(--borde-sutil); padding-bottom: 30px; }
+        .footer-col h4 { font-size: 1rem; margin-bottom: 15px; color: var(--texto-blanco); transition: color 0.4s ease;}
+        .footer-col p, .footer-col a { color: var(--texto-gris); text-decoration: none; font-size: 0.85rem; display: block; margin-bottom: 8px; transition: color 0.3s; }
+        .footer-col a:hover { color: var(--naranja-cangrejo); }
+        .footer-bottom { text-align: center; padding-top: 20px; font-size: 0.75rem; color: var(--texto-gris); }
 
-        .footer-bottom {
-            text-align: center;
-            padding-top: 20px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.5);
-        }
-
-        /* --- RESPONSIVE --- */
         @media (max-width: 768px) {
             .navbar-links { display: none; }
             .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Barra de Navegación Oscura -->
     <nav class="navbar">
         <div class="navbar-logo">
             <img src="logo.jpg" alt="Arrecife Market Logo">
         </div>
         <ul class="navbar-links">
             <li><a href="#">Inicio</a></li>
-            <li><a href="#">Productos</a></li>
+            <li><a href="#productos">Productos</a></li>
             <li><a href="#">Nosotros</a></li>
             <li><a href="#">Contacto</a></li>
         </ul>
-        <button class="navbar-cart">
-            🛒 Carrito (0)
-        </button>
+        <div class="navbar-actions">
+            <!-- Botón de tema rediseñado -->
+            <button class="btn-modo" id="btn-modo" onclick="cambiarTema()">🌙</button>
+        </div>
     </nav>
 
-    <!-- Banner Principal (Hero) -->
     <header class="hero">
-        <h1>La frescura del arrecife, directo a tu mesa.</h1>
+        <h1>La frescura del arrecife,<br>directo a tu mesa.</h1>
         <p>Seleccionamos los mejores productos del mar. (El cangrejo de nuestro logo supervisa personalmente cada pedido).</p>
         <a href="#productos" class="hero-btn">Ver Catálogo</a>
+
+        <!-- Olas SVG de alta calidad -->
+        <div class="olas-container">
+            <!-- Ola 3 (Más lejana, más sutil) -->
+            <div class="ola ola3" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z\' fill=\'%230ea5e9\' opacity=\'.2\'></path></svg>');"></div>
+            
+            <!-- Ola 2 (Intermedia) -->
+            <div class="ola ola2" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,0V15.81C13,36.92,27.64,56.86,47.69,72.05,99.41,111.27,165,111,224.58,91.58c31.15-10.15,60.09-26.07,89.67-39.8,40.92-19,84.73-46,130.83-49.67,36.26-2.85,70.9,9.42,98.6,31.56,31.77,25.39,62.32,62,103.63,73,40.44,10.79,81.35-6.69,119.13-24.28s75.16-39,116.92-43.05c59.73-5.85,113.28,22.88,168.9,38.84,30.2,8.66,59,6.17,87.09-7.5,22.43-10.89,48-26.93,60.65-49.24V0Z\' fill=\'%230ea5e9\' opacity=\'.5\'></path></svg>');"></div>
+            
+            <!-- Ola 1 (Más cercana, la más visible) -->
+            <div class="ola ola1" style="background-image: url('data:image/svg+xml;utf8,<svg viewBox=\'0 0 1200 120\' xmlns=\'http://www.w3.org/2000/svg\'><path d=\'M0,0V5.63C149.93,59,314.09,71.32,475.83,42.57c43-7.64,84.23-20.12,127.61-26.46,59-8.63,112.48,12.24,165.56,35.4C827.93,77.22,886,95.24,951.2,90c86.53-7,172.46-45.71,248.8-84.81V0Z\' fill=\'%230ea5e9\'></path></svg>');"></div>
+        </div>
     </header>
 
-    <!-- Sección de Productos -->
     <main class="container" id="productos">
-        
         <div class="section-header">
-            <h2>Nuestros Favoritos</h2>
-            <p>Calidad premium con un toque de buen humor.</p>
+            <h2>Categorías</h2>
+            <p>Explora nuestra selección premium</p>
         </div>
 
-        <div class="grid-productos">
-            
-            <!-- Producto 1 -->
-            <div class="producto-card">
-                <span class="badge">Más Vendido</span>
-                <div class="img-container">
-                    <img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?q=80&w=600&auto=format&fit=crop" alt="Camarones" class="producto-imagen">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-nombre">Camarones "No te rías"</h3>
-                    <div class="valoracion">★★★★★ (124)</div>
-                    <p class="producto-descripcion">Camarones frescos. Vienen con chiste incluido en el empaque. Si no te ríes, te devolvemos el camarón (pero no el chiste).</p>
-                    <div class="producto-footer">
-                        <span class="precio">$12.99</span>
-                        <button class="btn-comprar">Añadir</button>
-                    </div>
-                </div>
-            </div>
+        <div class="filtros-container" id="filtros-container">
+            <button class="btn-filtro activo" onclick="filtrarProductos('todos', this)">Todos</button>
+        </div>
 
-            <!-- Producto 2 -->
-            <div class="producto-card">
-                <div class="img-container">
-                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=600&auto=format&fit=crop" alt="Pescado" class="producto-imagen">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-nombre">Pescado "Pez-ado"</h3>
-                    <div class="valoracion">★★★★☆ (89)</div>
-                    <p class="producto-descripcion">Está bien pescado, no te preocupes. Pescado fresco del día. Si te dice algo, es que el pescado está muy fresco.</p>
-                    <div class="producto-footer">
-                        <span class="precio">$15.50</span>
-                        <button class="btn-comprar">Añadir</button>
-                    </div>
-                </div>
-            </div>
+        <div class="section-header" style="margin-top: 40px;">
+            <h2>Nuestro Catálogo</h2>
+        </div>
 
-            <!-- Producto 3 -->
-            <div class="producto-card">
-                <span class="badge" style="background-color: var(--verde-agua);">El Jefe</span>
-                <div class="img-container">
-                    <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=600&auto=format&fit=crop" alt="Cangrejo" class="producto-imagen">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-nombre">Cangrejo "Tu Jefe"</h3>
-                    <div class="valoracion">★★★★★ (210)</div>
-                    <p class="producto-descripcion">El del logo. Es un cangrejo de negocios. Te mira feo si no lo compras. Garantía de que no se escapa de la olla.</p>
-                    <div class="producto-footer">
-                        <span class="precio">$22.00</span>
-                        <button class="btn-comprar">Añadir</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Producto 4 -->
-            <div class="producto-card">
-                <div class="img-container">
-                    <img src="https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?q=80&w=600&auto=format&fit=crop" alt="Pulpo" class="producto-imagen">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-nombre">Pulpo "Ocho Brazos"</h3>
-                    <div class="valoracion">★★★★☆ (67)</div>
-                    <p class="producto-descripcion">Perfecto para abrazar tus papilas gustativas. No es tinta de pulpo, es tinta de bolígrafo, pero sabe rico.</p>
-                    <div class="producto-footer">
-                        <span class="precio">$18.75</span>
-                        <button class="btn-comprar">Añadir</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Producto 5 -->
-            <div class="producto-card">
-                <div class="img-container">
-                    <img src="https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?q=80&w=600&auto=format&fit=crop" alt="Almejas" class="producto-imagen">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-nombre">Almejas "Chismosas"</h3>
-                    <div class="valoracion">★★★★★ (156)</div>
-                    <p class="producto-descripcion">Si les pones el oído, te cuentan lo que pasó en el arrecife ayer. Se abren solas cuando hay drama.</p>
-                    <div class="producto-footer">
-                        <span class="precio">$9.99</span>
-                        <button class="btn-comprar">Añadir</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Producto 6 -->
-            <div class="producto-card">
-                <span class="badge" style="background-color: #d4af37;">Premium</span>
-                <div class="img-container">
-                    <img src="https://images.unsplash.com/photo-1553247407-23251ce81f59?q=80&w=600&auto=format&fit=crop" alt="Langosta" class="producto-imagen">
-                </div>
-                <div class="producto-info">
-                    <h3 class="producto-nombre">Langosta "Cara"</h3>
-                    <div class="valoracion">★★★★★ (302)</div>
-                    <p class="producto-descripcion">Es cara porque es la reina del arrecife. Solo se alimenta de billetes de 100 dólares (broma, come pescado).</p>
-                    <div class="producto-footer">
-                        <span class="precio">$45.00</span>
-                        <button class="btn-comprar">Añadir</button>
-                    </div>
-                </div>
-            </div>
-
+        <div class="grid-productos" id="contenedor-productos">
+            <p style="text-align: center; grid-column: 1 / -1; color: var(--texto-gris); font-weight: bold; padding: 20px;">
+                🦀 Cargando productos...
+            </p>
         </div>
     </main>
 
-    <!-- Pie de Página -->
     <footer>
         <div class="footer-grid">
             <div class="footer-col">
                 <h4>Arrecife Market</h4>
-                <p>La pescadería más divertida y fresca de la web. Calidad garantizada por nuestro cangrejo CEO.</p>
+                <p>La pescadería más divertida y fresca de la web.</p>
             </div>
             <div class="footer-col">
-                <h4>Enlaces Rápidos</h4>
+                <h4>Enlaces</h4>
                 <a href="#">Inicio</a>
-                <a href="#">Catálogo</a>
-                <a href="#">Política de Envíos</a>
-                <a href="#">Devoluciones (y chistes)</a>
+                <a href="#productos">Catálogo</a>
+                <a href="#">Envíos</a>
             </div>
             <div class="footer-col">
                 <h4>Contacto</h4>
                 <p>📍 Fondo del Mar, Arrecife #404</p>
                 <p>📞 +1 800 CANGREJO</p>
-                <p>✉️ hola@arrecifemarket.com</p>
-            </div>
-            <div class="footer-col">
-                <h4>Síguenos</h4>
-                <a href="#">Instagram</a>
-                <a href="#">Facebook</a>
-                <a href="#">TikTok (bailes de cangrejo)</a>
             </div>
         </div>
         <div class="footer-bottom">
-            <p>© 2023 Arrecife Market. Todos los derechos reservados. El cangrejo no se hace responsable de los chistes malos.</p>
+            <p>© 2023 Arrecife Market. Todos los derechos reservados.</p>
         </div>
     </footer>
 
+    <script>
+        const URL_EXCEL_ONLINE = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQ-wBzHjp6urAM1pl8f9kDGMH0nXBZEOIITuY6N7bXWPoVz6EUm5ApBHTTIupYrO3VDEZGPYtz4SiSK/pub?output=csv';
+
+        let todosLosProductos = [];
+
+        document.addEventListener("DOMContentLoaded", () => {
+            const temaGuardado = localStorage.getItem('tema-arrecife');
+            
+            if (temaGuardado === 'claro') {
+                document.body.classList.add('light-mode');
+                document.getElementById('btn-modo').innerText = '☀️';
+            } else {
+                document.getElementById('btn-modo').innerText = '🌙';
+            }
+
+            Papa.parse(URL_EXCEL_ONLINE, {
+                download: true,
+                header: true,
+                skipEmptyLines: true,
+                complete: function(results) {
+                    if(results.data && results.data.length > 0) {
+                        todosLosProductos = results.data.map(fila => {
+                            const filaLimpia = {};
+                            for (let llave in fila) {
+                                if (fila.hasOwnProperty(llave)) {
+                                    let nombreColumna = llave.toLowerCase().trim()
+                                        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                                    filaLimpia[nombreColumna] = fila[llave];
+                                }
+                            }
+                            return filaLimpia;
+                        });
+
+                        crearBotonesCategorias(todosLosProductos);
+                        renderizarProductos(todosLosProductos, 'todos');
+                    } else {
+                        mostrarError("El archivo está vacío.");
+                    }
+                },
+                error: function(error) {
+                    mostrarError("No se pudo conectar con Google Sheets.");
+                }
+            });
+        });
+
+        function cambiarTema() {
+            const body = document.body;
+            const btn = document.getElementById('btn-modo');
+            
+            body.classList.toggle('light-mode');
+            
+            if (body.classList.contains('light-mode')) {
+                btn.innerText = '☀️';
+                localStorage.setItem('tema-arrecife', 'claro');
+            } else {
+                btn.innerText = '🌙';
+                localStorage.setItem('tema-arrecife', 'oscuro');
+            }
+        }
+
+        function crearBotonesCategorias(productos) {
+            const contenedorFiltros = document.getElementById('filtros-container');
+            const categoriasUnicas = [...new Set(productos.map(p => p.categoria))].filter(cat => cat && cat.trim() !== '');
+
+            categoriasUnicas.forEach(categoria => {
+                const boton = document.createElement('button');
+                boton.className = 'btn-filtro';
+                boton.innerText = categoria;
+                boton.onclick = function() { filtrarProductos(categoria, this); };
+                contenedorFiltros.appendChild(boton);
+            });
+        }
+
+        function filtrarProductos(categoriaSeleccionada, botonClicado) {
+            document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('activo'));
+            botonClicado.classList.add('activo');
+
+            let productosFiltrados = todosLosProductos;
+            if (categoriaSeleccionada !== 'todos') {
+                productosFiltrados = todosLosProductos.filter(p => p.categoria && p.categoria.toLowerCase() === categoriaSeleccionada.toLowerCase());
+            }
+            
+            renderizarProductos(productosFiltrados, categoriaSeleccionada);
+        }
+
+        function renderizarProductos(productos, categoriaSeleccionada) {
+            const contenedor = document.getElementById('contenedor-productos');
+            contenedor.innerHTML = ''; 
+
+            if(productos.length === 0) {
+                contenedor.innerHTML = `<p style="text-align: center; grid-column: 1 / -1; color: var(--texto-gris);">No hay productos aquí. 🦀</p>`;
+                return;
+            }
+
+            if (categoriaSeleccionada === 'todos') {
+                const categorias = [...new Set(productos.map(p => p.categoria))].filter(c => c);
+
+                categorias.forEach(cat => {
+                    const tituloSeparador = document.createElement('div');
+                    tituloSeparador.className = 'separador-categoria';
+                    tituloSeparador.innerText = cat;
+                    contenedor.appendChild(tituloSeparador);
+
+                    const productosDeCategoria = productos.filter(p => p.categoria === cat);
+                    dibujarTarjetas(productosDeCategoria, contenedor);
+                });
+
+                const productosSinCategoria = productos.filter(p => !p.categoria || p.categoria.trim() === '');
+                if (productosSinCategoria.length > 0) {
+                    const tituloSeparador = document.createElement('div');
+                    tituloSeparador.className = 'separador-categoria';
+                    tituloSeparador.innerText = 'Otros Productos';
+                    contenedor.appendChild(tituloSeparador);
+                    dibujarTarjetas(productosSinCategoria, contenedor);
+                }
+            } else {
+                dibujarTarjetas(productos, contenedor);
+            }
+        }
+
+        function dibujarTarjetas(listaProductos, contenedor) {
+            listaProductos.forEach((prod, index) => {
+                const nombre = prod.nombre || 'Producto sin nombre';
+                const descripcion = prod.descripcion || 'Sin descripción disponible.';
+                const precioOriginal = prod.precio || '0';
+                
+                const precioLimpio = String(precioOriginal).replace(/[^0-9.,-]/g, '').replace(',', '.');
+                const precioFormateado = isNaN(parseFloat(precioLimpio)) ? '0.00' : parseFloat(precioLimpio).toFixed(2);
+                
+                const etiqueta = prod.etiqueta || '';
+                const imagen = prod.imagen || 'https://images.unsplash.com/photo-1559737558-2f5a35f4523b?q=80&w=600&auto=format&fit=crop';
+
+                const tarjeta = document.createElement('div');
+                tarjeta.className = 'producto-card';
+                
+                const idTarjeta = 'tarjeta-' + Math.random().toString(36).substr(2, 9);
+                tarjeta.id = idTarjeta;
+
+                tarjeta.innerHTML = `
+                    <span class="badge">${etiqueta}</span>
+                    <div class="img-container">
+                        <img src="${imagen}" alt="${nombre}" class="producto-imagen" onerror="this.src='https://images.unsplash.com/photo-1559737558-2f5a35f4523b?q=80&w=600&auto=format&fit=crop'">
+                    </div>
+                    <div class="producto-info">
+                        <h3 class="producto-nombre">${nombre}</h3>
+                        <p class="producto-descripcion">${descripcion}</p>
+                        <div class="producto-footer">
+                            <span class="precio">$${precioFormateado}</span>
+                            <button class="btn-comprar" onclick="toggleExpandir('${idTarjeta}', this)">Ver más</button>
+                        </div>
+                    </div>
+                `;
+                
+                contenedor.appendChild(tarjeta);
+            });
+        }
+
+        function toggleExpandir(idTarjeta, boton) {
+            const tarjeta = document.getElementById(idTarjeta);
+            
+            if (tarjeta.classList.contains('expandida')) {
+                tarjeta.classList.remove('expandida');
+                boton.innerText = 'Ver más';
+            } else {
+                document.querySelectorAll('.producto-card.expandida').forEach(card => {
+                    card.classList.remove('expandida');
+                });
+                document.querySelectorAll('.btn-comprar').forEach(btn => {
+                    btn.innerText = 'Ver más';
+                });
+
+                tarjeta.classList.add('expandida');
+                boton.innerText = 'Ver menos';
+
+                setTimeout(() => {
+                    tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+            }
+        }
+
+        function mostrarError(mensaje) {
+            document.getElementById('contenedor-productos').innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 30px; background: #2a1a1a; border-radius: 15px; border: 1px solid #ff4d4d; color: #ff4d4d;">
+                    <h3>🚨 Error</h3>
+                    <p>${mensaje}</p>
+                </div>
+            `;
+        }
+    </script>
 </body>
 </html>
