@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrecife Market | Pescadería Premium</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        /* --- PALETA DE COLORES --- */
+        :root {
+            --azul-marino: #0b2545; 
+            --azul-ola: #134074;    
+            --naranja-cangrejo: #ff6b00; 
+            --verde-agua: #0d9488;   
+            --amarillo-mostaza: #fbbf24; 
+            --fondo-crema: #faf8f5;  
+            --blanco-puro: #ffffff;
+            --gris-texto: #64748b;
+            --sombra-suave: 0 10px 30px rgba(11, 37, 69, 0.08);
+        }
+
+        /* --- RESET Y ESTILOS GENERALES --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--fondo-crema);
+            color: var(--azul-marino);
+            line-height: 1.6;
+        }
+
+        /* --- BARRA DE NAVEGACIÓN (AHORA AZUL OSCURO) --- */
+        .navbar {
+            background-color: var(--azul-marino); /* Fondo oscuro para que resalte el logo blanco */
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 4px solid var(--naranja-cangrejo); /* Línea naranja de acento */
+        }
+
+        /* Efecto para que el logo blanco se vea limpio */
+        .navbar-logo {
+            background-color: white;
+            padding: 8px 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .navbar-logo img {
+            height: 50px; /* Ajusta el tamaño si es necesario */
+            object-fit: contain;
+        }
+
+        .navbar-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+        }
+
+        /* Enlaces en blanco para contrastar con el fondo oscuro */
+        .navbar-links a {
+            text-decoration: none;
+            color: var(--blanco-puro);
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.3s;
+        }
+
+        .navbar-links a:hover {
+            color: var(--naranja-cangrejo); /* El hover se vuelve naranja */
+        }
+
+        /* Botón del carrito en naranja para que resalte */
+        .navbar-cart {
+            background-color: var(--naranja-cangrejo);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border: none;
+            transition: background 0.3s, transform 0.2s;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .navbar-cart:hover {
+            background-color: var(--amarillo-mostaza);
+            color: var(--azul-marino);
+            transform: scale(1.05);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            background: linear-gradient(135deg, var(--azul-ola) 0%, var(--verde-agua) 100%);
+            color: white;
+            text-align: center;
+            padding: 90px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 15px;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            font-weight: 400;
+            opacity: 0.95;
+            max-width: 600px;
+            margin: 0 auto 30px auto;
+        }
+
+        .hero-btn {
+            background-color: var(--amarillo-mostaza);
+            color: var(--azul-marino);
+            text-decoration: none;
+            padding: 15px 35px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            display: inline-block;
+            transition: transform 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        }
+
+        .hero-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+            background-color: #fcd34d;
+        }
+
+        /* --- SECCIÓN DE PRODUCTOS --- */
+        .container {
+            max-width: 1200px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            color: var(--azul-marino);
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+
+        .section-header p {
+            color: var(--gris-texto);
+            font-size: 1.1rem;
+        }
+
+        /* --- CUADRÍCULA DE PRODUCTOS --- */
+        .grid-productos {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+        }
+
+        /* --- TARJETA DE PRODUCTO --- */
+        .producto-card {
+            background: var(--blanco-puro);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--sombra-suave);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            border-top: 5px solid var(--amarillo-mostaza); 
+        }
+
+        .producto-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(11, 37, 69, 0.15);
+            border-top-color: var(--verde-agua); 
+        }
+
+        /* Etiquetas (Badges) */
+        .badge {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background-color: var(--naranja-cangrejo);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .producto-imagen {
+            height: 220px;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .producto-card:hover .producto-imagen {
+            transform: scale(1.05);
+        }
+
+        .img-container {
+            overflow: hidden;
+        }
+
+        .producto-info {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .producto-nombre {
+            font-size: 1.2rem;
+            margin: 0 0 8px 0;
+            color: var(--azul-marino);
+            font-weight: 700;
+        }
+
+        .producto-descripcion {
+            font-size: 0.9rem;
+            color: var(--gris-texto);
+            margin-bottom: 15px;
+            flex-grow: 1;
+        }
+
+        .valoracion {
+            color: var(--amarillo-mostaza); 
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .producto-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 15px;
+        }
+
+        .precio {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--verde-agua); 
+        }
+
+        .btn-comprar {
+            background-color: var(--azul-ola);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Montserrat', sans-serif;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .btn-comprar:hover {
+            background-color: var(--verde-agua);
+            transform: scale(1.05);
+        }
+
+        /* --- PIE DE PÁGINA (FOOTER) --- */
+        footer {
+            background-color: var(--azul-marino);
+            color: white;
+            padding: 60px 5% 20px 5%;
+            margin-top: 80px;
+            border-top: 5px solid var(--naranja-cangrejo); 
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            color: var(--amarillo-mostaza); 
+        }
+
+        .footer-col p, .footer-col a {
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: block;
+            margin-bottom: 10px;
+            transition: color 0.3s;
+        }
+
+        .footer-col a:hover {
+            color: var(--naranja-cangrejo);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 20px;
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.5);
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            .navbar-links { display: none; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Barra de Navegación Oscura -->
+    <nav class="navbar">
+        <div class="navbar-logo">
+            <img src="logo.jpg" alt="Arrecife Market Logo">
+        </div>
+        <ul class="navbar-links">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Productos</a></li>
+            <li><a href="#">Nosotros</a></li>
+            <li><a href="#">Contacto</a></li>
+        </ul>
+        <button class="navbar-cart">
+            🛒 Carrito (0)
+        </button>
+    </nav>
+
+    <!-- Banner Principal (Hero) -->
+    <header class="hero">
+        <h1>La frescura del arrecife, directo a tu mesa.</h1>
+        <p>Seleccionamos los mejores productos del mar. (El cangrejo de nuestro logo supervisa personalmente cada pedido).</p>
+        <a href="#productos" class="hero-btn">Ver Catálogo</a>
+    </header>
+
+    <!-- Sección de Productos -->
+    <main class="container" id="productos">
+        
+        <div class="section-header">
+            <h2>Nuestros Favoritos</h2>
+            <p>Calidad premium con un toque de buen humor.</p>
+        </div>
+
+        <div class="grid-productos">
+            
+            <!-- Producto 1 -->
+            <div class="producto-card">
+                <span class="badge">Más Vendido</span>
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1559737558-2f5a35f4523b?q=80&w=600&auto=format&fit=crop" alt="Camarones" class="producto-imagen">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-nombre">Camarones "No te rías"</h3>
+                    <div class="valoracion">★★★★★ (124)</div>
+                    <p class="producto-descripcion">Camarones frescos. Vienen con chiste incluido en el empaque. Si no te ríes, te devolvemos el camarón (pero no el chiste).</p>
+                    <div class="producto-footer">
+                        <span class="precio">$12.99</span>
+                        <button class="btn-comprar">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 2 -->
+            <div class="producto-card">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=600&auto=format&fit=crop" alt="Pescado" class="producto-imagen">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-nombre">Pescado "Pez-ado"</h3>
+                    <div class="valoracion">★★★★☆ (89)</div>
+                    <p class="producto-descripcion">Está bien pescado, no te preocupes. Pescado fresco del día. Si te dice algo, es que el pescado está muy fresco.</p>
+                    <div class="producto-footer">
+                        <span class="precio">$15.50</span>
+                        <button class="btn-comprar">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 3 -->
+            <div class="producto-card">
+                <span class="badge" style="background-color: var(--verde-agua);">El Jefe</span>
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1559827260-dc66d52bef19?q=80&w=600&auto=format&fit=crop" alt="Cangrejo" class="producto-imagen">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-nombre">Cangrejo "Tu Jefe"</h3>
+                    <div class="valoracion">★★★★★ (210)</div>
+                    <p class="producto-descripcion">El del logo. Es un cangrejo de negocios. Te mira feo si no lo compras. Garantía de que no se escapa de la olla.</p>
+                    <div class="producto-footer">
+                        <span class="precio">$22.00</span>
+                        <button class="btn-comprar">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 4 -->
+            <div class="producto-card">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1545671913-b89ac1b4ac10?q=80&w=600&auto=format&fit=crop" alt="Pulpo" class="producto-imagen">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-nombre">Pulpo "Ocho Brazos"</h3>
+                    <div class="valoracion">★★★★☆ (67)</div>
+                    <p class="producto-descripcion">Perfecto para abrazar tus papilas gustativas. No es tinta de pulpo, es tinta de bolígrafo, pero sabe rico.</p>
+                    <div class="producto-footer">
+                        <span class="precio">$18.75</span>
+                        <button class="btn-comprar">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 5 -->
+            <div class="producto-card">
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?q=80&w=600&auto=format&fit=crop" alt="Almejas" class="producto-imagen">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-nombre">Almejas "Chismosas"</h3>
+                    <div class="valoracion">★★★★★ (156)</div>
+                    <p class="producto-descripcion">Si les pones el oído, te cuentan lo que pasó en el arrecife ayer. Se abren solas cuando hay drama.</p>
+                    <div class="producto-footer">
+                        <span class="precio">$9.99</span>
+                        <button class="btn-comprar">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Producto 6 -->
+            <div class="producto-card">
+                <span class="badge" style="background-color: #d4af37;">Premium</span>
+                <div class="img-container">
+                    <img src="https://images.unsplash.com/photo-1553247407-23251ce81f59?q=80&w=600&auto=format&fit=crop" alt="Langosta" class="producto-imagen">
+                </div>
+                <div class="producto-info">
+                    <h3 class="producto-nombre">Langosta "Cara"</h3>
+                    <div class="valoracion">★★★★★ (302)</div>
+                    <p class="producto-descripcion">Es cara porque es la reina del arrecife. Solo se alimenta de billetes de 100 dólares (broma, come pescado).</p>
+                    <div class="producto-footer">
+                        <span class="precio">$45.00</span>
+                        <button class="btn-comprar">Añadir</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Pie de Página -->
+    <footer>
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Arrecife Market</h4>
+                <p>La pescadería más divertida y fresca de la web. Calidad garantizada por nuestro cangrejo CEO.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Enlaces Rápidos</h4>
+                <a href="#">Inicio</a>
+                <a href="#">Catálogo</a>
+                <a href="#">Política de Envíos</a>
+                <a href="#">Devoluciones (y chistes)</a>
+            </div>
+            <div class="footer-col">
+                <h4>Contacto</h4>
+                <p>📍 Fondo del Mar, Arrecife #404</p>
+                <p>📞 +1 800 CANGREJO</p>
+                <p>✉️ hola@arrecifemarket.com</p>
+            </div>
+            <div class="footer-col">
+                <h4>Síguenos</h4>
+                <a href="#">Instagram</a>
+                <a href="#">Facebook</a>
+                <a href="#">TikTok (bailes de cangrejo)</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2023 Arrecife Market. Todos los derechos reservados. El cangrejo no se hace responsable de los chistes malos.</p>
+        </div>
+    </footer>
+
+</body>
+</html>
