@@ -31,15 +31,19 @@
             --hero-grad-3: #023e8a;
             
             /* Colores de las Olas (Modo Claro) */
-            --ola-1: #caf0f8; /* Ola trasera */
-            --ola-2: #90e0ef; /* Ola media */
-            --ola-3: #fcfaf6; /* Ola delantera */
+            --ola-1: #caf0f8; 
+            --ola-2: #90e0ef; 
+            --ola-3: #fcfaf6; 
             
             /* Botón Modo */
             --btn-modo-bg: #ffffff;
             --btn-modo-color: #2b2d42;
             --nav-bg: rgba(252, 250, 246, 0.9);
             --nav-border: rgba(255, 255, 255, 0.8);
+            
+            /* Textos del Hero (Siempre claros) */
+            --hero-texto: #ffffff;
+            --hero-subtexto: #e0f2fe;
         }
 
         body.dark-mode {
@@ -70,6 +74,10 @@
             --btn-modo-color: #e0e1dd;
             --nav-bg: rgba(11, 19, 43, 0.9);
             --nav-border: rgba(58, 80, 107, 0.8);
+            
+            /* Textos del Hero (Siguen claros para contrastar con fondo oscuro) */
+            --hero-texto: #ffffff;
+            --hero-subtexto: #cbd5e1;
         }
 
         /* --- RESET --- */
@@ -198,7 +206,7 @@
             background: linear-gradient(-45deg, var(--hero-grad-1), var(--hero-grad-2), var(--hero-grad-3), var(--hero-grad-2));
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
-            padding: 120px 20px 200px 20px; /* Más padding abajo para las olas */
+            padding: 120px 20px 140px 20px; /* Menos padding inferior porque las olas son más finas */
             text-align: center; 
             border-radius: 0 0 40px 40px; 
             margin-top: -100px; 
@@ -216,22 +224,25 @@
 
         .hero-contenido {
             position: relative; z-index: 10; max-width: 850px; margin: 0 auto;
-            color: var(--blanco-puro); padding-top: 60px;
+            /* Usamos variables que NO cambian a oscuro en el modo noche */
+            color: var(--hero-texto); 
+            padding-top: 60px;
             animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0;
         }
 
         .hero h1 {
             font-size: 4rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra más fuerte para legibilidad */
         }
         
         .hero p {
             font-size: 1.2rem; font-weight: 300; max-width: 700px; margin: 0 auto 40px auto;
-            opacity: 0.95; line-height: 1.5;
+            color: var(--hero-subtexto); /* Usamos variable de subtexto claro */
+            line-height: 1.5;
         }
 
         .hero-btn {
-            background-color: var(--naranja-coral); color: var(--blanco-puro);
+            background-color: var(--naranja-coral); color: #ffffff; /* Siempre blanco */
             text-decoration: none; padding: 16px 40px; border-radius: 50px;
             font-weight: 600; font-size: 1.1rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -243,11 +254,11 @@
             box-shadow: 0 15px 35px rgba(255, 107, 0, 0.6);
         }
 
-        /* --- CONTENEDOR DE OLAS ANIMADAS MEJORADO --- */
+        /* --- CONTENEDOR DE OLAS (MÁS FINO Y RÁPIDO) --- */
         .olas-svg-container {
             position: absolute;
             bottom: -5px; left: 0; width: 100%;
-            height: 180px; /* Más alto para que la ola se vea más grande */
+            height: 90px; /* Grosor a la mitad (antes 180px) */
             overflow: hidden;
             z-index: 5;
             line-height: 0;
@@ -261,33 +272,33 @@
             animation: moverOla 15s linear infinite;
         }
 
-        /* Ola 1 (Fondo - Lenta) */
+        /* Ola 1 (Fondo - Más rápida) */
         .ola-1 {
             color: var(--ola-1);
             animation-name: moverOla, respirarOla;
-            animation-duration: 18s, 8s; /* Más lenta */
+            animation-duration: 9s, 4s; /* Antes 18s, 8s */
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             animation-direction: reverse, alternate;
             z-index: 1;
         }
 
-        /* Ola 2 (Media - Rápida) */
+        /* Ola 2 (Media - Mucho más rápida) */
         .ola-2 {
             color: var(--ola-2);
             animation-name: moverOla, respirarOla;
-            animation-duration: 10s, 5s; /* Más rápida */
+            animation-duration: 5s, 2.5s; /* Antes 10s, 5s */
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             animation-direction: normal, alternate;
             z-index: 2;
         }
 
-        /* Ola 3 (Frente - Muy rápida) */
+        /* Ola 3 (Frente - La más rápida) */
         .ola-3 {
             color: var(--ola-3);
             animation-name: moverOla, respirarOla;
-            animation-duration: 6s, 4s; /* La más rápida y visible */
+            animation-duration: 3s, 2s; /* Antes 6s, 4s */
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             animation-direction: reverse, alternate;
@@ -300,12 +311,13 @@
         }
         @keyframes respirarOla {
             0% { transform: scaleY(1); }
-            100% { transform: scaleY(1.2); } /* Un poco más de respiración */
+            100% { transform: scaleY(1.2); }
         }
 
         /* --- CONTENEDOR PRINCIPAL --- */
         .container {
-            max-width: 1200px; margin: -80px auto 0 auto; padding: 0 20px;
+            max-width: 1200px; margin: -40px auto 0 auto; /* Menos margen porque la ola es más fina */
+            padding: 0 20px;
             position: relative; z-index: 20; display: flex; flex-direction: column; align-items: center;
         }
 
@@ -475,17 +487,14 @@
             <a href="#productos" class="hero-btn">Ver los productos</a>
         </div>
 
-        <!-- OLAS ANIMADAS MEJORADAS -->
+        <!-- OLAS ANIMADAS MÁS FINAS Y RÁPIDAS -->
         <div class="olas-svg-container">
-            <!-- Ola 1 (Fondo) -->
             <svg class="ola-svg ola-1" viewBox="0 0 1440 120" preserveAspectRatio="none">
                 <path d="M0,60 C200,100 400,20 720,50 C1040,80 1240,20 1440,60 L1440,120 L0,120 Z" fill="currentColor"></path>
             </svg>
-            <!-- Ola 2 (Medio) -->
             <svg class="ola-svg ola-2" viewBox="0 0 1440 120" preserveAspectRatio="none">
                 <path d="M0,50 C300,100 500,10 800,40 C1100,70 1300,20 1440,50 L1440,120 L0,120 Z" fill="currentColor"></path>
             </svg>
-            <!-- Ola 3 (Frente) -->
             <svg class="ola-svg ola-3" viewBox="0 0 1440 120" preserveAspectRatio="none">
                 <path d="M0,70 C250,110 450,30 750,60 C1050,90 1250,40 1440,70 L1440,120 L0,120 Z" fill="currentColor"></path>
             </svg>
