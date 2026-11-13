@@ -30,6 +30,11 @@
             --hero-grad-2: #0077b6;
             --hero-grad-3: #023e8a;
             
+            /* Colores de las Olas (Modo Claro) */
+            --ola-1: #caf0f8; /* Ola trasera */
+            --ola-2: #90e0ef; /* Ola media */
+            --ola-3: #fcfaf6; /* Ola delantera */
+            
             /* Botón Modo */
             --btn-modo-bg: #ffffff;
             --btn-modo-color: #2b2d42;
@@ -55,6 +60,11 @@
             --hero-grad-1: #1c2541;
             --hero-grad-2: #0b132b;
             --hero-grad-3: #000000;
+            
+            /* Colores de las Olas (Noche) */
+            --ola-1: #1c2541;
+            --ola-2: #16203a;
+            --ola-3: #0b132b;
             
             --btn-modo-bg: #1c2541;
             --btn-modo-color: #e0e1dd;
@@ -182,13 +192,13 @@
             .navbar { padding: 8px 15px 8px 10px; }
         }
 
-        /* --- HERO INTEGRADO CON CURVA ANIMADA Y PARTÍCULAS --- */
+        /* --- HERO --- */
         .hero {
             position: relative;
             background: linear-gradient(-45deg, var(--hero-grad-1), var(--hero-grad-2), var(--hero-grad-3), var(--hero-grad-2));
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
-            padding: 120px 20px 160px 20px;
+            padding: 120px 20px 200px 20px; /* Más padding abajo para las olas */
             text-align: center; 
             border-radius: 0 0 40px 40px; 
             margin-top: -100px; 
@@ -196,7 +206,6 @@
             transition: background 0.5s ease;
         }
 
-        /* Partículas flotantes */
         .particula {
             position: absolute;
             background: rgba(255, 255, 255, 0.4);
@@ -234,21 +243,69 @@
             box-shadow: 0 15px 35px rgba(255, 107, 0, 0.6);
         }
 
-        /* La curva SVG que integra el header con el fondo */
-        .curva-fondo {
+        /* --- CONTENEDOR DE OLAS ANIMADAS MEJORADO --- */
+        .olas-svg-container {
             position: absolute;
-            bottom: -2px; left: 0; width: 100%;
-            height: 120px; z-index: 5;
+            bottom: -5px; left: 0; width: 100%;
+            height: 180px; /* Más alto para que la ola se vea más grande */
+            overflow: hidden;
+            z-index: 5;
+            line-height: 0;
         }
 
-        .curva-fondo path {
-            fill: var(--arena-fondo);
-            transition: fill 0.5s ease;
+        .ola-svg {
+            position: absolute;
+            bottom: 0; left: 0;
+            width: 200%; 
+            height: 100%;
+            animation: moverOla 15s linear infinite;
+        }
+
+        /* Ola 1 (Fondo - Lenta) */
+        .ola-1 {
+            color: var(--ola-1);
+            animation-name: moverOla, respirarOla;
+            animation-duration: 18s, 8s; /* Más lenta */
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-direction: reverse, alternate;
+            z-index: 1;
+        }
+
+        /* Ola 2 (Media - Rápida) */
+        .ola-2 {
+            color: var(--ola-2);
+            animation-name: moverOla, respirarOla;
+            animation-duration: 10s, 5s; /* Más rápida */
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-direction: normal, alternate;
+            z-index: 2;
+        }
+
+        /* Ola 3 (Frente - Muy rápida) */
+        .ola-3 {
+            color: var(--ola-3);
+            animation-name: moverOla, respirarOla;
+            animation-duration: 6s, 4s; /* La más rápida y visible */
+            animation-timing-function: linear, ease-in-out;
+            animation-iteration-count: infinite, infinite;
+            animation-direction: reverse, alternate;
+            z-index: 3;
+        }
+
+        @keyframes moverOla {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        @keyframes respirarOla {
+            0% { transform: scaleY(1); }
+            100% { transform: scaleY(1.2); } /* Un poco más de respiración */
         }
 
         /* --- CONTENEDOR PRINCIPAL --- */
         .container {
-            max-width: 1200px; margin: -60px auto 0 auto; padding: 0 20px;
+            max-width: 1200px; margin: -80px auto 0 auto; padding: 0 20px;
             position: relative; z-index: 20; display: flex; flex-direction: column; align-items: center;
         }
 
@@ -410,7 +467,6 @@
     </div>
 
     <header class="hero">
-        <!-- Partículas animadas (JavaScript las generará) -->
         <div id="particulas-container"></div>
 
         <div class="hero-contenido">
@@ -419,10 +475,21 @@
             <a href="#productos" class="hero-btn">Ver los productos</a>
         </div>
 
-        <!-- Curva SVG que integra el header con el fondo de la página -->
-        <svg class="curva-fondo" viewBox="0 0 1440 120" preserveAspectRatio="none">
-            <path d="M0,60 C320,120 420,20 720,50 C1020,80 1120,10 1440,60 L1440,120 L0,120 Z"></path>
-        </svg>
+        <!-- OLAS ANIMADAS MEJORADAS -->
+        <div class="olas-svg-container">
+            <!-- Ola 1 (Fondo) -->
+            <svg class="ola-svg ola-1" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,60 C200,100 400,20 720,50 C1040,80 1240,20 1440,60 L1440,120 L0,120 Z" fill="currentColor"></path>
+            </svg>
+            <!-- Ola 2 (Medio) -->
+            <svg class="ola-svg ola-2" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,50 C300,100 500,10 800,40 C1100,70 1300,20 1440,50 L1440,120 L0,120 Z" fill="currentColor"></path>
+            </svg>
+            <!-- Ola 3 (Frente) -->
+            <svg class="ola-svg ola-3" viewBox="0 0 1440 120" preserveAspectRatio="none">
+                <path d="M0,70 C250,110 450,30 750,60 C1050,90 1250,40 1440,70 L1440,120 L0,120 Z" fill="currentColor"></path>
+            </svg>
+        </div>
     </header>
 
     <main class="container" id="productos">
@@ -458,13 +525,10 @@
             for(let i = 0; i < 20; i++) {
                 const particula = document.createElement('div');
                 particula.className = 'particula';
-                // Tamaño aleatorio
                 const size = Math.random() * 8 + 4;
                 particula.style.width = `${size}px`;
                 particula.style.height = `${size}px`;
-                // Posición inicial aleatoria
                 particula.style.left = `${Math.random() * 100}%`;
-                // Duración y retraso aleatorio
                 particula.style.animationDuration = `${Math.random() * 10 + 10}s`;
                 particula.style.animationDelay = `${Math.random() * 10}s`;
                 particulasContainer.appendChild(particula);
