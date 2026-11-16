@@ -25,23 +25,19 @@
             --sombra-fuerte: 0 20px 40px rgba(0, 119, 182, 0.15);
             --sombra-flotante: 0 15px 35px rgba(0,0,0,0.08);
             
-            /* Header Gradients */
             --hero-grad-1: #90e0ef;
             --hero-grad-2: #0077b6;
             --hero-grad-3: #023e8a;
             
-            /* Colores de las Olas (Modo Claro) */
             --ola-1: #caf0f8; 
             --ola-2: #90e0ef; 
             --ola-3: #fcfaf6; 
             
-            /* Botón Modo */
             --btn-modo-bg: #ffffff;
             --btn-modo-color: #2b2d42;
             --nav-bg: rgba(252, 250, 246, 0.9);
             --nav-border: rgba(255, 255, 255, 0.8);
             
-            /* Textos del Hero */
             --hero-texto: #ffffff;
             --hero-subtexto: #e0f2fe;
         }
@@ -60,12 +56,10 @@
             --sombra-fuerte: 0 20px 40px rgba(0, 0, 0, 0.6);
             --sombra-flotante: 0 15px 35px rgba(0,0,0,0.4);
             
-            /* Header Gradients (Noche) */
             --hero-grad-1: #1c2541;
             --hero-grad-2: #0b132b;
             --hero-grad-3: #000000;
             
-            /* Colores de las Olas (Noche) */
             --ola-1: #1c2541;
             --ola-2: #16203a;
             --ola-3: #0b132b;
@@ -173,29 +167,49 @@
             transform: translateY(-3px) rotate(180deg) scale(1.1);
         }
 
-        .btn-menu-movil {
+        /* --- MENÚ DESPLEGABLE NATIVO DE HTML --- */
+        .menu-nativo {
             display: none;
+            position: relative;
+            pointer-events: auto;
+        }
+
+        .menu-nativo summary {
             background: var(--btn-modo-bg); color: var(--btn-modo-color);
             border: 1px solid var(--arena-oscura); width: 42px; height: 42px;
             border-radius: 50%; cursor: pointer;
-            align-items: center; justify-content: center; font-size: 1.2rem;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; list-style: none; 
+        }
+        .menu-nativo summary::-webkit-details-marker { display: none; }
+
+        .menu-nativo[open] summary {
+            background: var(--naranja-coral); color: var(--blanco-puro);
+            border-color: var(--naranja-coral);
         }
 
-        .menu-movil {
-            position: absolute; top: 80px; width: 90%; max-width: 400px;
+        .menu-nativo .menu-contenido {
+            position: absolute; top: 60px; right: 0;
+            width: 250px;
             background: var(--blanco-puro); border-radius: 20px;
-            box-shadow: var(--sombra-fuerte); padding: 20px;
-            display: none; flex-direction: column; gap: 10px;
-            z-index: 1500; border: 1px solid var(--arena-oscura);
-            opacity: 0; transform: translateY(-10px); transition: all 0.3s ease;
+            box-shadow: var(--sombra-fuerte); padding: 15px;
+            display: flex; flex-direction: column; gap: 5px;
+            border: 1px solid var(--arena-oscura);
+            z-index: 1500;
         }
-        .menu-movil.activo { display: flex; opacity: 1; transform: translateY(0); }
-        .menu-movil a { text-decoration: none; color: var(--texto-principal); font-weight: 600; padding: 12px 20px; border-radius: 12px; transition: background 0.3s; }
-        .menu-movil a:hover { background: var(--arena-fondo); color: var(--naranja-coral); }
+
+        .menu-nativo .menu-contenido a {
+            text-decoration: none; color: var(--texto-principal);
+            font-weight: 600; padding: 12px 15px; border-radius: 10px;
+            transition: background 0.2s;
+        }
+        .menu-nativo .menu-contenido a:hover {
+            background: var(--arena-fondo); color: var(--naranja-coral);
+        }
 
         @media (max-width: 900px) {
             .navbar-links { display: none; }
-            .btn-menu-movil { display: flex; }
+            .menu-nativo { display: block; }
             .navbar { padding: 8px 15px 8px 10px; }
         }
 
@@ -417,7 +431,6 @@
             grid-column: 1 / -1; display: flex; flex-direction: row; height: 420px; 
             border: 2px solid var(--naranja-coral); box-shadow: var(--sombra-fuerte);
             animation: scaleIn 0.4s ease forwards;
-            /* ¡SOLUCIÓN! Forzamos que no tenga retraso al expandirse */
             animation-delay: 0s !important; 
         }
         .producto-card.expandida .img-container { width: 50%; height: 100%; }
@@ -429,7 +442,7 @@
         }
         .producto-card.expandida .precio { font-size: 2.2rem; }
 
-        /* --- SECCIÓN DE CONTACTO (ESTILO IPHONE) --- */
+        /* --- SECCIÓN DE CONTACTO --- */
         .contacto-seccion {
             width: 100%;
             max-width: 1200px;
@@ -557,30 +570,44 @@
 </head>
 <body>
 
+    <!-- SCRIPT PARA FORZAR EL INICIO ARRIBA AL CARGAR -->
+    <script>
+        // Esto le dice al navegador que no restaure la posición del scroll
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+        // Forzamos el scroll al inicio al cargar la página
+        window.scrollTo(0, 0);
+    </script>
+
     <div class="navbar-wrapper">
         <nav class="navbar">
             <div class="navbar-logo">
                 <img src="logo.jpg" alt="Arrecife Market">
             </div>
             <ul class="navbar-links">
-                <li><a href="#" style="color: var(--naranja-coral); background: rgba(255,107,0,0.1);">Inicio</a></li>
+                <li><a href="#inicio" style="color: var(--naranja-coral); background: rgba(255,107,0,0.1);">Inicio</a></li>
                 <li><a href="#productos">Catálogo</a></li>
                 <li><a href="#contacto">Contacto</a></li>
             </ul>
             <div class="navbar-actions">
                 <button class="btn-modo" id="theme-toggle" title="Cambiar Tema">🌙</button>
-                <button class="btn-menu-movil" id="menu-toggle">☰</button>
+                
+                <!-- MENÚ NATIVO DE HTML -->
+                <details class="menu-nativo">
+                    <summary>☰</summary>
+                    <div class="menu-contenido">
+                        <a href="#inicio">Inicio</a>
+                        <a href="#productos">Catálogo</a>
+                        <a href="#contacto">Contacto</a>
+                    </div>
+                </details>
+                
             </div>
         </nav>
-        
-        <div class="menu-movil" id="menu-movil">
-            <a href="#">Inicio</a>
-            <a href="#productos">Catálogo</a>
-            <a href="#contacto">Contacto</a>
-        </div>
     </div>
 
-    <header class="hero">
+    <header class="hero" id="inicio">
         <div id="particulas-container"></div>
 
         <div class="hero-contenido">
@@ -620,7 +647,6 @@
         <p>Estamos aquí para ayudarte con tu pedido o resolver tus dudas.</p>
         
         <div class="contacto-grid">
-            <!-- Tarjeta de Instagram -->
             <a href="https://www.instagram.com/arrecife_market/" target="_blank" class="contacto-card instagram">
                 <div class="contacto-logo-container">
                     <img src="Instagram.jpg" alt="Instagram Logo">
@@ -629,7 +655,6 @@
                 <span>@arrecife_market</span>
             </a>
 
-            <!-- Tarjeta de WhatsApp -->
             <a href="https://www.whatsapp.com/catalog/56954579142/?app_absent=0" target="_blank" class="contacto-card whatsapp">
                 <div class="contacto-logo-container">
                     <img src="Whatsapp.avif" alt="WhatsApp Logo">
@@ -652,8 +677,6 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             const themeToggle = document.getElementById('theme-toggle');
-            const menuToggle = document.getElementById('menu-toggle');
-            const menuMovil = document.getElementById('menu-movil');
             const body = document.body;
 
             // --- PARTÍCULAS FLOTANTES ---
@@ -683,14 +706,10 @@
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
             });
 
-            // --- MENÚ MÓVIL ---
-            menuToggle.addEventListener('click', () => {
-                menuMovil.classList.toggle('activo');
-            });
-
-            document.querySelectorAll('.menu-movil a').forEach(link => {
+            // --- CERRAR MENÚ NATIVO AL HACER CLIC EN UN ENLACE ---
+            document.querySelectorAll('.menu-nativo .menu-contenido a').forEach(link => {
                 link.addEventListener('click', () => {
-                    menuMovil.classList.remove('activo');
+                    document.querySelector('.menu-nativo').removeAttribute('open');
                 });
             });
 
@@ -821,10 +840,8 @@
             if (tarjeta.classList.contains('expandida')) {
                 tarjeta.classList.remove('expandida');
                 boton.innerText = 'Ver detalle';
-                // Restauramos el retraso (aunque no es estrictamente necesario al cerrar)
                 tarjeta.style.animationDelay = ''; 
             } else {
-                // 1. Cerramos cualquier otra tarjeta que esté abierta
                 document.querySelectorAll('.producto-card.expandida').forEach(card => {
                     card.classList.remove('expandida');
                 });
@@ -832,14 +849,11 @@
                     btn.innerText = 'Ver detalle';
                 });
 
-                // 2. ¡EL TRUCO! Quitamos el retraso de la animación de entrada
                 tarjeta.style.animationDelay = '0s';
 
-                // 3. Expandimos la tarjeta
                 tarjeta.classList.add('expandida');
                 boton.innerText = 'Cerrar';
                 
-                // 4. Hacemos scroll suave
                 setTimeout(() => {
                     tarjeta.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }, 100);
