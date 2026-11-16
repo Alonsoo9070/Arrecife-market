@@ -41,7 +41,7 @@
             --nav-bg: rgba(252, 250, 246, 0.9);
             --nav-border: rgba(255, 255, 255, 0.8);
             
-            /* Textos del Hero (Siempre claros) */
+            /* Textos del Hero */
             --hero-texto: #ffffff;
             --hero-subtexto: #e0f2fe;
         }
@@ -75,7 +75,6 @@
             --nav-bg: rgba(11, 19, 43, 0.9);
             --nav-border: rgba(58, 80, 107, 0.8);
             
-            /* Textos del Hero (Siguen claros para contrastar con fondo oscuro) */
             --hero-texto: #ffffff;
             --hero-subtexto: #cbd5e1;
         }
@@ -206,7 +205,7 @@
             background: linear-gradient(-45deg, var(--hero-grad-1), var(--hero-grad-2), var(--hero-grad-3), var(--hero-grad-2));
             background-size: 400% 400%;
             animation: gradientShift 15s ease infinite;
-            padding: 120px 20px 140px 20px; /* Menos padding inferior porque las olas son más finas */
+            padding: 120px 20px 140px 20px;
             text-align: center; 
             border-radius: 0 0 40px 40px; 
             margin-top: -100px; 
@@ -224,7 +223,6 @@
 
         .hero-contenido {
             position: relative; z-index: 10; max-width: 850px; margin: 0 auto;
-            /* Usamos variables que NO cambian a oscuro en el modo noche */
             color: var(--hero-texto); 
             padding-top: 60px;
             animation: fadeInUp 1s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0;
@@ -232,17 +230,17 @@
 
         .hero h1 {
             font-size: 4rem; font-weight: 700; margin-bottom: 20px; line-height: 1.1;
-            text-shadow: 0 4px 15px rgba(0,0,0,0.3); /* Sombra más fuerte para legibilidad */
+            text-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
         
         .hero p {
             font-size: 1.2rem; font-weight: 300; max-width: 700px; margin: 0 auto 40px auto;
-            color: var(--hero-subtexto); /* Usamos variable de subtexto claro */
+            color: var(--hero-subtexto); 
             line-height: 1.5;
         }
 
         .hero-btn {
-            background-color: var(--naranja-coral); color: #ffffff; /* Siempre blanco */
+            background-color: var(--naranja-coral); color: #ffffff;
             text-decoration: none; padding: 16px 40px; border-radius: 50px;
             font-weight: 600; font-size: 1.1rem;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
@@ -254,11 +252,11 @@
             box-shadow: 0 15px 35px rgba(255, 107, 0, 0.6);
         }
 
-        /* --- CONTENEDOR DE OLAS (MÁS FINO Y RÁPIDO) --- */
+        /* --- CONTENEDOR DE OLAS --- */
         .olas-svg-container {
             position: absolute;
             bottom: -5px; left: 0; width: 100%;
-            height: 90px; /* Grosor a la mitad (antes 180px) */
+            height: 90px; 
             overflow: hidden;
             z-index: 5;
             line-height: 0;
@@ -272,33 +270,30 @@
             animation: moverOla 15s linear infinite;
         }
 
-        /* Ola 1 (Fondo - Más rápida) */
         .ola-1 {
             color: var(--ola-1);
             animation-name: moverOla, respirarOla;
-            animation-duration: 9s, 4s; /* Antes 18s, 8s */
+            animation-duration: 9s, 4s;
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             animation-direction: reverse, alternate;
             z-index: 1;
         }
 
-        /* Ola 2 (Media - Mucho más rápida) */
         .ola-2 {
             color: var(--ola-2);
             animation-name: moverOla, respirarOla;
-            animation-duration: 5s, 2.5s; /* Antes 10s, 5s */
+            animation-duration: 5s, 2.5s;
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             animation-direction: normal, alternate;
             z-index: 2;
         }
 
-        /* Ola 3 (Frente - La más rápida) */
         .ola-3 {
             color: var(--ola-3);
             animation-name: moverOla, respirarOla;
-            animation-duration: 3s, 2s; /* Antes 6s, 4s */
+            animation-duration: 3s, 2s;
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             animation-direction: reverse, alternate;
@@ -316,7 +311,7 @@
 
         /* --- CONTENEDOR PRINCIPAL --- */
         .container {
-            max-width: 1200px; margin: -40px auto 0 auto; /* Menos margen porque la ola es más fina */
+            max-width: 1200px; margin: -40px auto 0 auto; 
             padding: 0 20px;
             position: relative; z-index: 20; display: flex; flex-direction: column; align-items: center;
         }
@@ -432,6 +427,113 @@
         }
         .producto-card.expandida .precio { font-size: 2.2rem; }
 
+        /* --- SECCIÓN DE CONTACTO --- */
+        .contacto-seccion {
+            width: 100%;
+            max-width: 1200px;
+            margin: 80px auto 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .contacto-seccion h2 {
+            font-size: 2.5rem;
+            color: var(--azul-profundo);
+            margin-bottom: 10px;
+        }
+
+        .contacto-seccion p {
+            color: var(--texto-suave);
+            margin-bottom: 40px;
+            font-size: 1.1rem;
+        }
+
+        .contacto-grid {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contacto-card {
+            background: var(--blanco-puro);
+            border-radius: 20px;
+            padding: 30px;
+            width: 280px;
+            text-decoration: none;
+            color: var(--texto-principal);
+            box-shadow: var(--sombra-suave);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid var(--arena-oscura);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contacto-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--sombra-fuerte);
+        }
+
+        /* Colores específicos al pasar el ratón */
+        .contacto-card.instagram:hover { border-color: #E1306C; }
+        .contacto-card.whatsapp:hover { border-color: #25D366; }
+
+        /* Contenedor circular para los logos */
+        .contacto-logo-container {
+            width: 80px;
+            height: 80px;
+            background: #ffffff; /* Fondo blanco para que resalte el logo */
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.4s ease;
+            overflow: hidden; /* Para que la imagen no se salga del círculo */
+            padding: 10px; /* Espacio para que el logo respire */
+        }
+
+        .contacto-card:hover .contacto-logo-container {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .contacto-logo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* Ajusta la imagen sin deformarla */
+        }
+
+        .contacto-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: var(--texto-principal);
+        }
+
+        .contacto-card span {
+            font-size: 0.9rem;
+            color: var(--texto-suave);
+        }
+
+        /* Efecto de fondo en hover */
+        .contacto-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 0;
+        }
+        .contacto-card.instagram::before { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .contacto-card.whatsapp::before { background: #25D366; }
+
+        .contacto-card:hover::before { opacity: 0.05; }
+
+        .contacto-card > * { position: relative; z-index: 1; }
+
         @media (max-width: 900px) {
             .producto-card.expandida { flex-direction: column; height: auto; }
             .producto-card.expandida .img-container { width: 100%; height: 300px; }
@@ -440,6 +542,7 @@
             .hero p { font-size: 1rem; }
             .filtros-tarjeta { border-radius: 20px; }
             body { padding-top: 90px; }
+            .contacto-grid { flex-direction: column; align-items: center; }
         }
 
         footer {
@@ -461,8 +564,7 @@
             <ul class="navbar-links">
                 <li><a href="#" style="color: var(--naranja-coral); background: rgba(255,107,0,0.1);">Inicio</a></li>
                 <li><a href="#productos">Catálogo</a></li>
-                <li><a href="#">Nosotros</a></li>
-                <li><a href="#">Contacto</a></li>
+                <li><a href="#contacto">Contacto</a></li>
             </ul>
             <div class="navbar-actions">
                 <button class="btn-modo" id="theme-toggle" title="Cambiar Tema">🌙</button>
@@ -473,8 +575,7 @@
         <div class="menu-movil" id="menu-movil">
             <a href="#">Inicio</a>
             <a href="#productos">Catálogo</a>
-            <a href="#">Nosotros</a>
-            <a href="#">Contacto</a>
+            <a href="#contacto">Contacto</a>
         </div>
     </div>
 
@@ -487,7 +588,6 @@
             <a href="#productos" class="hero-btn">Ver los productos</a>
         </div>
 
-        <!-- OLAS ANIMADAS MÁS FINAS Y RÁPIDAS -->
         <div class="olas-svg-container">
             <svg class="ola-svg ola-1" viewBox="0 0 1440 120" preserveAspectRatio="none">
                 <path d="M0,60 C200,100 400,20 720,50 C1040,80 1240,20 1440,60 L1440,120 L0,120 Z" fill="currentColor"></path>
@@ -512,6 +612,32 @@
         </div>
 
     </main>
+
+    <!-- SECCIÓN DE CONTACTO CON IMÁGENES REALES -->
+    <section class="contacto-seccion" id="contacto">
+        <h2>¡Contáctanos!</h2>
+        <p>Estamos aquí para ayudarte con tu pedido o resolver tus dudas.</p>
+        
+        <div class="contacto-grid">
+            <!-- Tarjeta de Instagram -->
+            <a href="https://www.instagram.com/arrecife_market/" target="_blank" class="contacto-card instagram">
+                <div class="contacto-logo-container">
+                    <img src="Instagram.jpg" alt="Instagram Logo">
+                </div>
+                <h3>Instagram</h3>
+                <span>@arrecife_market</span>
+            </a>
+
+            <!-- Tarjeta de WhatsApp -->
+            <a href="https://www.whatsapp.com/catalog/56954579142/?app_absent=0" target="_blank" class="contacto-card whatsapp">
+                <div class="contacto-logo-container">
+                    <img src="Whatsapp.avif" alt="WhatsApp Logo">
+                </div>
+                <h3>WhatsApp</h3>
+                <span>Ver Catálogo</span>
+            </a>
+        </div>
+    </section>
 
     <footer>
         <h3>Arrecife Market</h3>
